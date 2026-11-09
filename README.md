@@ -43,8 +43,8 @@ Vendora does the investigation and hands the analyst a **case file**: what diffe
 
 | Capability | Question it answers | Status |
 |---|---|---|
-| **Extract** | What do these documents actually say? | Planned (M1) |
-| **Match** | Where do they disagree? | Planned (M2) |
+- [x] **M1: Extraction.** Structured extraction from invoice, PO and contract, with page references (tested with a mocked model, first real run pending)
+- [x] **M2: Matching.** Invoice vs PO comparison: price, quantity, duplicate and unagreed-fee detection
 | **Investigate** | Why, and which line or clause proves it? | Planned (M3) |
 | **Resolve** | What is the safest next step? | Planned (M3) |
 | **Escalate** | Has a person approved it? | Planned (M5) |
@@ -173,14 +173,16 @@ Results are published here after the first evaluation run.
 
 ## Project structure
 
-```text
+```
 vendora/
-├── api/            FastAPI application
-├── agents/         extraction, matching, investigation, supervisor
-├── db/             migrations and schemas
-├── eval/           synthetic cases and scoring scripts
-├── ui/             review dashboard
-├── docs/           design notes and assets
+├── app/
+│   ├── main.py         FastAPI application
+│   ├── schemas.py      case file and discrepancy models
+│   └── agents/         extraction, matching
+├── data/samples/       synthetic invoice, PO and contract
+├── tests/              unit tests (run in CI)
+├── db/                 migrations and schemas
+├── docs/               design notes and assets
 ├── docker-compose.yml
 └── .env.example
 ```
