@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/code-of-conduct-banner.svg" width="100%" alt="Code of conduct">
+</p>
+
 # Code of Conduct
 
 This code of conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org), version 2.1.

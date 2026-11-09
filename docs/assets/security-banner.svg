@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" width="800" height="200" role="img" aria-label="Security policy">
+<title>Security policy</title>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#141f38"/><stop offset="1" stop-color="#0e1628"/></linearGradient>
+<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="0.8" fill="#23324f"/></pattern>
+<filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<clipPath id="card"><rect width="800" height="200" rx="14"/></clipPath>
+
+<style>text{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif}.flow{stroke-dasharray:4 6;animation:dash 1.2s linear infinite}@keyframes dash{to{stroke-dashoffset:-10}}@media (prefers-reduced-motion: reduce){.flow{animation:none}}</style>
+</defs>
+<g clip-path="url(#card)">
+<rect width="800" height="200" fill="url(#bg)"/>
+<rect width="800" height="200" fill="url(#dots)"/>
+
+<rect x="540" y="28" width="120" height="144" rx="10" fill="#182238" stroke="#3a4e78" stroke-width="1.5"/>
+<rect x="556" y="48" width="60" height="7" rx="3.5" fill="#3a4e78"/>
+<rect x="556" y="68" width="88" height="7" rx="3.5" fill="#3a4e78"/>
+<rect x="556" y="88" width="74" height="7" rx="3.5" fill="#3a4e78">
+  <animate attributeName="fill" values="#3a4e78;#3a4e78;#fb7185;#fb7185;#3a4e78" keyTimes="0;0.36;0.42;0.85;1" dur="4.5s" repeatCount="indefinite"/></rect>
+<rect x="556" y="108" width="84" height="7" rx="3.5" fill="#3a4e78"/>
+<rect x="556" y="128" width="50" height="7" rx="3.5" fill="#3a4e78"/>
+<rect x="540" y="38" width="120" height="3" fill="#2dd4bf" filter="url(#glow)">
+  <animate attributeName="y" values="38;160;160;38" keyTimes="0;0.6;0.95;1" dur="4.5s" repeatCount="indefinite"/>
+  <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.6;0.7;1" dur="4.5s" repeatCount="indefinite"/></rect>
+<circle cx="700" cy="100" r="46" fill="none" stroke="#2dd4bf" stroke-width="2" opacity="0">
+  <animate attributeName="r" values="40;62" dur="2.2s" repeatCount="indefinite"/>
+  <animate attributeName="opacity" values="0.55;0" dur="2.2s" repeatCount="indefinite"/></circle>
+<path d="M700 62 L734 75 V104 C734 126 720 140 700 149 C680 140 666 126 666 104 V75 Z" fill="#182238" stroke="#2dd4bf" stroke-width="3" stroke-linejoin="round" filter="url(#glow)"/>
+<path d="M686 104 L697 116 L716 90" fill="none" stroke="#2dd4bf" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+</g>
+<rect x="0.75" y="0.75" width="798.5" height="198.5" rx="13.5" fill="none" stroke="#3a4e78" stroke-width="1.5"/>
+<text x="40" y="96" font-size="36" font-weight="700" fill="#e8edf7">Security policy</text>
+<text x="40" y="128" font-size="16" fill="#8d9bb8">Report privately, never in a public issue.</text>
+</svg>

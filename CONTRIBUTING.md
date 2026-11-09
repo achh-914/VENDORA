@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/contributing-banner.svg" width="100%" alt="Contributing to Vendora">
+</p>
+
 # Contributing to Vendora
 
 Thanks for your interest. Vendora is in early development, so the most useful contributions right now are feedback, test cases, and focused fixes.
