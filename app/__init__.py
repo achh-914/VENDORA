@@ -1,1 +1,1 @@
-
+"""Vendora application."""
