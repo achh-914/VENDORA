@@ -16,7 +16,7 @@
   <img alt="llm" src="https://img.shields.io/badge/LLM-Claude-d97706?style=flat-square">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-16a34a?style=flat-square">
   <img alt="schema" src="https://github.com/achh-914/VENDORA/actions/workflows/schema.yml/badge.svg">
-  [![ci](https://github.com/achh-914/VENDORA/actions/workflows/ci.yml/badge.svg)](https://github.com/achh-914/VENDORA/actions/workflows/ci.yml)
+<a href="https://github.com/achh-914/VENDORA/actions/workflows/ci.yml"><img src="https://github.com/achh-914/VENDORA/actions/workflows/ci.yml/badge.svg" alt="ci"></a>
 </p>
 
 ---
