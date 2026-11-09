@@ -43,8 +43,6 @@ jobs:
       - name: Check audit log is append-only
         run: |
           psql -h localhost -U vendora -d vendora -v ON_ERROR_STOP=1 -c "INSERT INTO audit_log(actor_type, actor, event_type) VALUES ('system','ci','smoke');"
-          if psql -h localhost -U vendora -d vendora -c "DELETE FROM audit_log;" 2>&1 | grep -q "append-only"; then
-            echo "delete blocked as expected"
-          else
-            echo "delete was not blocked"; exit 1
-          fi
+          out=$(psql -h localhost -U vendora -d vendora -c "DELETE FROM audit_log;" 2>&1 || true)
+          echo "$out"
+          echo "$out" | grep -q "append-only"
