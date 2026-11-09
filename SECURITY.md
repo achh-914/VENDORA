@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/security-banner.svg" width="100%" alt="Security policy">
+</p>
+
 # Security Policy
 
 ## Project status
