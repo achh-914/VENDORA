@@ -15,7 +15,9 @@ dependencies = [
     "uvicorn>=0.29",
     "pydantic>=2.6",
 ]
-
+gemini = [
+    "google-genai>=1.0",
+]
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
