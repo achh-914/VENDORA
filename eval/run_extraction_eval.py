@@ -88,8 +88,8 @@ def main():
         try:
             doc = extract_document(SAMPLES / name)
             checks = scorer(doc)
-except Exception as error:  # noqa: BLE001
-print(f"  ERROR: {type(error).__name__}: {error}")
+        except Exception as error:  # noqa: BLE001
+            print(f"  ERROR: {type(error).__name__}: {error}")
             continue
         ok = sum(1 for _, passed in checks if passed)
         total_ok += ok
