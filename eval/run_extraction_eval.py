@@ -98,4 +98,31 @@ JOBS = [
 ]
 
 
-v
+def main():
+    total_ok, total_n, failed = 0, 0, 0
+    for name, scorer, n_checks in JOBS:
+        print(f"\n{name}")
+        try:
+            doc = _extract_with_retry(SAMPLES / name)
+            checks = scorer(doc)
+        except Exception as error:  # noqa: BLE001
+            print(f"  FAILED after retries: {type(error).__name__}: {str(error)[:80]}")
+            failed += 1
+            total_n += n_checks
+            continue
+        ok = sum(1 for _, passed in checks if passed)
+        total_ok += ok
+        total_n += len(checks)
+        print(f"  {ok}/{len(checks)} fields correct")
+        for label, passed in checks:
+            if not passed:
+                print(f"  wrong: {label}")
+        time.sleep(2)
+
+    print(f"\nExtraction accuracy: {total_ok}/{total_n}")
+    print(f"Documents failed after retries: {failed}/{len(JOBS)} (counted as wrong)")
+    print("Documents: 3 synthetic PDFs (very small sample)")
+
+
+if __name__ == "__main__":
+    main()
