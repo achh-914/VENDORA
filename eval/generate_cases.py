@@ -1,3 +1,4 @@
+# ruff: noqa: UP031, UP032
 """Generate the Vendora evaluation cases.
 
 Each case is a folder with three synthetic PDFs (invoice, PO, contract) and an
@@ -141,7 +142,8 @@ def write_contract(path, c):
         Paragraph("Agreement number: {}".format(ct["number"]), BODY),
         Paragraph("Effective date: {}".format(ct["effective"]), BODY),
         Paragraph(
-            "Between {} (Buyer) and {} (Supplier).".format(BUYER["name"], c["supplier"]["name"]), BODY
+            "Between {} (Buyer) and {} (Supplier).".format(BUYER["name"], c["supplier"]["name"]),
+            BODY,
         ),
     ]
     page = 1
