@@ -176,10 +176,10 @@ Run it yourself: `python eval/run_eval.py` (matching) and `python eval/run_extra
 
 ## Roadmap
 
-- [x] **M1: Extraction.** Structured extraction from invoice, PO and contract, with page references
+- [x] **M1: Extraction.** Structured extraction from invoice, PO and contract, with page references (scored on 3 synthetic PDFs with Gemini)
 - [x] **M2: Matching.** Cross-document comparison and discrepancy detection
 - [x] **M3: Investigation.** Root cause with cited evidence, proposed resolution, audit log
-- [x] **M4: Evaluation.** 80 synthetic cases and automated scoring in CI (extraction scoring comes with the first real model run)
+- [x] **M4: Evaluation.** 80 synthetic cases and automated scoring in CI, plus a field-level extraction score
 - [ ] **M5: Demo.** Review dashboard with the human approval flow and audit view
 - [ ] **Later:** Negotiation agent, compliance rules, dynamic routing, exports
 
