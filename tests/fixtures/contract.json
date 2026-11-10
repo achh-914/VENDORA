@@ -1,0 +1,27 @@
+{
+  "doc_type": "contract",
+  "doc_id": "MSA-ACME-2025",
+  "supplier": "Acme Industrial Supply Ltd.",
+  "buyer": "Northwind Manufacturing Inc.",
+  "currency": "$",
+  "total": null,
+  "total_page": 6,
+  "lines": [],
+  "clauses": [
+    {
+      "number": "4.1",
+      "text": "Unit prices are fixed as listed in Exhibit A: SM-200 at $90.00, MB-10 at $15.00, CA-5 at $20.00. Prices may only change by written amendment signed by both parties.",
+      "page": 6
+    },
+    {
+      "number": "4.2",
+      "text": "Freight and delivery costs are included in the unit price. The Supplier shall not invoice freight, handling, or any surcharge separately unless agreed in writing before the order is placed.",
+      "page": 6
+    },
+    {
+      "number": "4.3",
+      "text": "Payment terms are Net 30 from the invoice date.",
+      "page": 6
+    }
+  ]
+}
