@@ -124,14 +124,17 @@ $ vendora analyze --invoice inv-2041.pdf --po po-4471.pdf --contract msa-acme.pd
 
 ## Quick start
 
-> Available from M1. The steps below are the planned setup.
+> Extraction (M1) works today. The rest is planned.
 
 ```bash
 git clone https://github.com/achh-914/VENDORA.git
 cd VENDORA
-cp .env.example .env        # add ANTHROPIC_API_KEY
+cp .env.example .env        # add GEMINI_API_KEY
 docker compose up -d        # PostgreSQL with pgvector
+pip install -e ".[dev]"
+python -m app.agents.extraction data/samples/inv-2041.pdf
 ```
+
 
 ---
 
@@ -162,7 +165,7 @@ Results are published here after the first evaluation run.
 
 ## Roadmap
 
-- [ ] **M1: Extraction.** Structured extraction from invoice, PO and contract, with page references
+- [x] **M1: Extraction.** Structured extraction from invoice, PO and contract, with page references
 - [ ] **M2: Matching.** Cross-document comparison and discrepancy detection
 - [ ] **M3: Investigation.** Root cause with cited evidence, proposed resolution, audit log
 - [ ] **M4: Evaluation.** 30 to 50 synthetic cases and automated scoring
