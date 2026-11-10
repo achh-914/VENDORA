@@ -4,7 +4,10 @@ Runs the extraction agent on the three sample PDFs in data/samples and scores
 the output against values known from the documents.
 
 Uses the provider chosen by VENDORA_PROVIDER (claude or gemini). Calls a real
-model: use synthetic documents only. Run from the project root:
+model: use synthetic documents only. Temporary server errors (503, 429) are
+retried; a document that still fails is counted as wrong, never skipped.
+
+Run from the project root:
 
     python eval/run_extraction_eval.py
 """
@@ -22,6 +25,7 @@ SAMPLES = ROOT / "data" / "samples"
 
 INVOICE_LINES = {1: 9000.0, 2: 3000.0, 3: 3000.0, 4: 3000.0}
 PO_LINES = {1: 9000.0, 2: 3000.0, 3: 3000.0}
+RETRY_MARKERS = ("503", "429", "UNAVAILABLE", "RESOURCE_EXHAUSTED")
 
 
 def _val(value):
@@ -74,22 +78,37 @@ def _score_contract(doc):
     return checks
 
 
+def _extract_with_retry(path, attempts=4):
+    for attempt in range(1, attempts):
+        try:
+            return extract_document(path)
+        except Exception as error:  # noqa: BLE001
+            if not any(marker in str(error) for marker in RETRY_MARKERS):
+                raise
+            wait = 10 * 2 ** (attempt - 1)
+            print(f"  {type(error).__name__}, retry {attempt}/{attempts - 1} in {wait}s")
+            time.sleep(wait)
+    return extract_document(path)
+
+
 JOBS = [
-    ("inv-2041.pdf", _score_invoice),
-    ("po-4471.pdf", _score_po),
-    ("msa-acme.pdf", _score_contract),
+    ("inv-2041.pdf", _score_invoice, 12),
+    ("po-4471.pdf", _score_po, 9),
+    ("msa-acme.pdf", _score_contract, 5),
 ]
 
 
 def main():
-    total_ok, total_n = 0, 0
-    for name, scorer in JOBS:
+    total_ok, total_n, failed = 0, 0, 0
+    for name, scorer, n_checks in JOBS:
         print(f"\n{name}")
         try:
-            doc = extract_document(SAMPLES / name)
+            doc = _extract_with_retry(SAMPLES / name)
             checks = scorer(doc)
         except Exception as error:  # noqa: BLE001
-            print(f"  ERROR: {type(error).__name__}: {error}")
+            print(f"  FAILED after retries: {type(error).__name__}: {str(error)[:80]}")
+            failed += 1
+            total_n += n_checks
             continue
         ok = sum(1 for _, passed in checks if passed)
         total_ok += ok
@@ -101,6 +120,7 @@ def main():
         time.sleep(2)
 
     print(f"\nExtraction accuracy: {total_ok}/{total_n}")
+    print(f"Documents failed after retries: {failed}/{len(JOBS)} (counted as wrong)")
     print("Documents: 3 synthetic PDFs (very small sample)")
 
 
