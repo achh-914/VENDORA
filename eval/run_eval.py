@@ -52,7 +52,11 @@ CATALOG = [
     ("FT-7", "Filter cartridge"),
 ]
 FEES = ["Freight surcharge", "Handling fee", "Shipping charge", "Expedite surcharge"]
-SCENARIOS = ["clean", "fee", "price", "qty", "dup"]
+PRICES = [12.34, 33.33, 7.77, 19.99, 4.56]
+
+BASIC = ["clean", "fee", "price", "qty", "dup"]
+HARD = ["multi", "two_fees", "shuffle", "agreed_fee", "rounding"]
+SCENARIOS = BASIC + HARD
 
 
 def _line(no, description, qty, price):
@@ -78,11 +82,21 @@ def _doc(kind, doc_id, lines):
     )
 
 
+def _fee(rng):
+    return float(rng.randint(2, 40) * 100)
+
+
 def _make_case(rng, scenario, case_id):
     chosen = rng.sample(CATALOG, rng.randint(2, 4))
     spec = []
     for sku, name in chosen:
         spec.append([f"{sku} - {name}", rng.randint(5, 50) * 10, rng.randint(5, 90)])
+
+    if scenario == "rounding":
+        spec = [[d, rng.randint(3, 9) * 7, rng.choice(PRICES)] for d, _, _ in spec]
+    elif scenario == "agreed_fee":
+        spec.append([rng.choice(FEES), 1, _fee(rng)])
+
     po_lines = [_line(i, d, q, p) for i, (d, q, p) in enumerate(spec, 1)]
 
     inv = [list(row) for row in spec]
@@ -90,7 +104,7 @@ def _make_case(rng, scenario, case_id):
     idx = rng.randrange(len(inv))
 
     if scenario == "fee":
-        fee = float(rng.randint(2, 40) * 100)
+        fee = _fee(rng)
         extra.append((rng.choice(FEES), 1, fee))
         expected.append(("UNAGREED-FEE", fee))
     elif scenario == "price":
@@ -107,6 +121,21 @@ def _make_case(rng, scenario, case_id):
         desc, qty, price = inv[idx]
         extra.append((desc, qty, price))
         expected.append(("DUPLICATE-LINE", float(qty * price)))
+    elif scenario == "multi":
+        fee = _fee(rng)
+        extra.append((rng.choice(FEES), 1, fee))
+        expected.append(("UNAGREED-FEE", fee))
+        _, qty, old = inv[idx]
+        new = old + rng.randint(1, 10)
+        inv[idx][2] = new
+        expected.append(("PRICE-MISMATCH", float((new - old) * qty)))
+    elif scenario == "two_fees":
+        for name in rng.sample(FEES, 2):
+            fee = _fee(rng)
+            extra.append((name, 1, fee))
+            expected.append(("UNAGREED-FEE", fee))
+    elif scenario == "shuffle":
+        rng.shuffle(inv)
 
     inv_rows = [tuple(row) for row in inv] + extra
     inv_lines = [_line(i, d, q, p) for i, (d, q, p) in enumerate(inv_rows, 1)]
@@ -141,7 +170,9 @@ def _cites_fee_clause(case_file):
 
 
 def evaluate(seed=7, per_scenario=8):
-    stats = {"cases": 0, "detect": 0, "delta": 0, "delta_n": 0, "cite": 0, "cite_n": 0}
+    stats = dict.fromkeys(
+        ["cases", "detect", "delta", "delta_n", "cite", "cite_n", "approval"], 0
+    )
     by_scenario = {name: [0, 0] for name in SCENARIOS}
     failures = []
 
@@ -170,6 +201,7 @@ def evaluate(seed=7, per_scenario=8):
             stats["cite_n"] += 1
             result = investigate(finding, CONTRACT, case_id=case["id"])
             stats["cite"] += _cites_fee_clause(result)
+            stats["approval"] += bool(getattr(result, "requires_human_approval", False))
 
     return stats, by_scenario, failures
 
@@ -178,16 +210,25 @@ def _pct(a, b):
     return f"{a}/{b} ({100 * a / b:.1f}%)" if b else "n/a"
 
 
+def _group(by_scenario, names):
+    ok = sum(by_scenario[name][0] for name in names)
+    total = sum(by_scenario[name][1] for name in names)
+    return ok, total
+
+
 def main():
     stats, by_scenario, failures = evaluate()
     print(f"Cases: {stats['cases']}")
     print(f"Discrepancy detection accuracy: {_pct(stats['detect'], stats['cases'])}")
+    print(f"  basic cases:                  {_pct(*_group(by_scenario, BASIC))}")
+    print(f"  hard cases:                   {_pct(*_group(by_scenario, HARD))}")
     print(f"Amount (delta) accuracy:        {_pct(stats['delta'], stats['delta_n'])}")
     print(f"Fee clause citation (4.2, p.2): {_pct(stats['cite'], stats['cite_n'])}")
+    print(f"Human approval required:        {_pct(stats['approval'], stats['cite_n'])}")
     print("Average cost per case:          $0.00 (offline, no LLM)")
     print("\nBy scenario:")
     for name, (ok, total) in by_scenario.items():
-        print(f"  {name:<6} {_pct(ok, total)}")
+        print(f"  {name:<10} {_pct(ok, total)}")
     if failures:
         print("\nFirst failures (expected vs got):")
         for case_id, want, got in failures[:5]:
