@@ -12,9 +12,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from app.agents.extraction import ExtractedDocument, ExtractedLine  # noqa: E402
-from app.agents.investigation import investigate, parse_clauses  # noqa: E402
-from app.agents.matching import match_documents  # noqa: E402
+from app.agents.extraction import ExtractedDocument, ExtractedLine
+from app.agents.investigation import investigate, parse_clauses
+from app.agents.matching import match_documents
 
 CONTRACT_PAGES = [
     "3.2 The Supplier confirms each order within 5 business days.\n",
