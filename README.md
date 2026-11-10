@@ -177,7 +177,7 @@ Run it yourself: `python eval/run_eval.py`
 - [x] **M1: Extraction.** Structured extraction from invoice, PO and contract, with page references
 - [x] **M2: Matching.** Cross-document comparison and discrepancy detection
 - [x] **M3: Investigation.** Root cause with cited evidence, proposed resolution, audit log
-- [ ] **M4: Evaluation.** 30 to 50 synthetic cases and automated scoring
+- [x] **M4: Evaluation.** 80 synthetic cases and automated scoring in CI (extraction scoring comes with the first real model run)
 - [ ] **M5: Demo.** Review dashboard with the human approval flow and audit view
 - [ ] **Later:** Negotiation agent, compliance rules, dynamic routing, exports
 
