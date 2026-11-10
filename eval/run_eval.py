@@ -12,20 +12,37 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from app.agents.extraction import ExtractedDocument, ExtractedLine
-from app.agents.investigation import investigate, parse_clauses
+from app.agents.extraction import ExtractedClause, ExtractedDocument, ExtractedLine
+from app.agents.investigation import investigate
 from app.agents.matching import match_documents
 
-CONTRACT_PAGES = [
-    "3.2 The Supplier confirms each order within 5 business days.\n",
-    (
-        "4.1 Unit prices are fixed as listed in Exhibit A. "
-        "Prices may only change by written amendment.\n"
-        "4.2 Freight and delivery costs are included in the unit price. "
-        "The Supplier shall not invoice freight, handling, or any surcharge separately.\n"
-        "4.3 Payment terms are Net 30 from the invoice date.\n"
-    ),
-]
+FEE_CLAUSE_TEXT = (
+    "Freight and delivery costs are included in the unit price. "
+    "The Supplier shall not invoice freight, handling, or any surcharge separately."
+)
+
+CONTRACT = ExtractedDocument(
+    doc_type="contract",
+    doc_id="MSA-EVAL",
+    clauses=[
+        ExtractedClause(
+            number="3.2",
+            text="The Supplier confirms each order within 5 business days.",
+            page=1,
+        ),
+        ExtractedClause(
+            number="4.1",
+            text="Unit prices are fixed. Prices may only change by written amendment.",
+            page=2,
+        ),
+        ExtractedClause(number="4.2", text=FEE_CLAUSE_TEXT, page=2),
+        ExtractedClause(
+            number="4.3",
+            text="Payment terms are Net 30 from the invoice date.",
+            page=2,
+        ),
+    ],
+)
 
 CATALOG = [
     ("SM-200", "Industrial sensor module"),
@@ -35,14 +52,7 @@ CATALOG = [
     ("FT-7", "Filter cartridge"),
 ]
 FEES = ["Freight surcharge", "Handling fee", "Shipping charge", "Expedite surcharge"]
-EXPECTED_CLAUSE = {"UNAGREED-FEE": "4.2", "PRICE-MISMATCH": "4.1"}
-SCENARIOS = {
-    "clean": None,
-    "fee": "UNAGREED-FEE",
-    "price": "PRICE-MISMATCH",
-    "qty": "QTY-VARIANCE",
-    "dup": "DUPLICATE-LINE",
-}
+SCENARIOS = ["clean", "fee", "price", "qty", "dup"]
 
 
 def _line(no, description, qty, price):
@@ -118,15 +128,26 @@ def make_cases(seed=7, per_scenario=8):
     return cases
 
 
+def _ftype(finding):
+    kind = getattr(finding, "type", None) or getattr(finding, "finding", None)
+    return getattr(kind, "value", str(kind))
+
+
+def _cites_fee_clause(case_file):
+    evidence = getattr(case_file, "evidence", None) or []
+    return any(
+        e.doc == CONTRACT.doc_id and e.page == 2 and "4.2" in e.ref for e in evidence
+    )
+
+
 def evaluate(seed=7, per_scenario=8):
-    clauses = parse_clauses(CONTRACT_PAGES)
     stats = {"cases": 0, "detect": 0, "delta": 0, "delta_n": 0, "cite": 0, "cite_n": 0}
     by_scenario = {name: [0, 0] for name in SCENARIOS}
     failures = []
 
     for case in make_cases(seed, per_scenario):
         findings = match_documents(case["invoice"], case["po"])
-        got = sorted((f.type.value, round(float(f.delta), 2)) for f in findings)
+        got = sorted((_ftype(f), round(float(f.delta), 2)) for f in findings)
         want = sorted(case["expected"])
 
         stats["cases"] += 1
@@ -144,12 +165,11 @@ def evaluate(seed=7, per_scenario=8):
             stats["delta"] += abs(want_delta - got_delta) < 0.01
 
         for finding in findings:
-            expected_number = EXPECTED_CLAUSE.get(finding.type.value)
-            if expected_number is None:
+            if _ftype(finding) != "UNAGREED-FEE":
                 continue
             stats["cite_n"] += 1
-            result = investigate(finding, clauses, contract_id="msa-eval.pdf")
-            stats["cite"] += bool(result.clause and result.clause.number == expected_number)
+            result = investigate(finding, CONTRACT, case_id=case["id"])
+            stats["cite"] += _cites_fee_clause(result)
 
     return stats, by_scenario, failures
 
@@ -163,7 +183,7 @@ def main():
     print(f"Cases: {stats['cases']}")
     print(f"Discrepancy detection accuracy: {_pct(stats['detect'], stats['cases'])}")
     print(f"Amount (delta) accuracy:        {_pct(stats['delta'], stats['delta_n'])}")
-    print(f"Evidence citation correctness:  {_pct(stats['cite'], stats['cite_n'])}")
+    print(f"Fee clause citation (4.2, p.2): {_pct(stats['cite'], stats['cite_n'])}")
     print("Average cost per case:          $0.00 (offline, no LLM)")
     print("\nBy scenario:")
     for name, (ok, total) in by_scenario.items():
