@@ -70,6 +70,31 @@ def _compare_lines(
     return findings
 
 
+def _reconcile_totals(
+    invoice: ExtractedDocument, po: ExtractedDocument, findings: list[Finding]
+) -> list[Finding]:
+    """Flag a total gap that the line-level findings do not explain."""
+    if invoice.total is None or po.total is None:
+        return []
+    explained = sum(f.delta for f in findings)
+    residual = round(invoice.total - po.total - explained, 2)
+    if abs(residual) < 0.005:
+        return []
+    inv_ref = f"total ${invoice.total:,.2f}"
+    po_ref = f"total ${po.total:,.2f}"
+    return [
+        Finding(
+            type=DiscrepancyType.PRICE_MISMATCH,
+            delta=residual,
+            summary="Invoice total gap vs the PO is not explained by the line items",
+            evidence=[
+                Evidence(doc=invoice.doc_id, page=invoice.total_page or 1, ref=inv_ref),
+                Evidence(doc=po.doc_id, page=po.total_page or 1, ref=po_ref),
+            ],
+        )
+    ]
+
+
 def match_documents(invoice: ExtractedDocument, po: ExtractedDocument) -> list[Finding]:
     """Compare invoice lines against PO lines and return the discrepancies."""
     po_lines: dict[str, ExtractedLine] = {}
@@ -108,4 +133,5 @@ def match_documents(invoice: ExtractedDocument, po: ExtractedDocument) -> list[F
 
         findings.extend(_compare_lines(invoice, po, line, po_line))
 
+    findings.extend(_reconcile_totals(invoice, po, findings))
     return findings
