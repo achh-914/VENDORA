@@ -170,7 +170,7 @@ Hard matching cases cover several errors in one invoice, two unagreed fees, shuf
 
 **Read this carefully.** These are small, clean, synthetic inputs, and the extraction score comes from a single run on three text PDFs (one request needed a retry after a temporary server error). It shows the pipeline works end to end. It does not show real-world accuracy. Scanned documents, other layouts and languages are not covered, and Claude, the default provider, has not been scored yet.
 
-Run it yourself: `python eval/run_eval.py` (matching) and `python eval/run_extraction_eval.py` (extraction, needs an API key). eval/run_eval.py`
+Run it yourself: `python eval/run_eval.py` (matching) and `python eval/run_extraction_eval.py` (extraction, needs an API key).
 
 ---
 
