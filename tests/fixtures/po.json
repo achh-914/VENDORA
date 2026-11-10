@@ -1,0 +1,36 @@
+{
+  "doc_type": "purchase_order",
+  "doc_id": "PO-4471",
+  "supplier": "Acme Industrial Supply Ltd.",
+  "buyer": "Northwind Manufacturing Inc.",
+  "currency": "USD",
+  "total": 15000.0,
+  "total_page": 1,
+  "lines": [
+    {
+      "line_no": 1,
+      "description": "SM-200 - Industrial sensor module",
+      "quantity": 100.0,
+      "unit_price": 90.0,
+      "amount": 9000.0,
+      "page": 1
+    },
+    {
+      "line_no": 2,
+      "description": "MB-10 - Mounting bracket",
+      "quantity": 200.0,
+      "unit_price": 15.0,
+      "amount": 3000.0,
+      "page": 1
+    },
+    {
+      "line_no": 3,
+      "description": "CA-5 - Cable assembly",
+      "quantity": 150.0,
+      "unit_price": 20.0,
+      "amount": 3000.0,
+      "page": 1
+    }
+  ],
+  "clauses": []
+}
