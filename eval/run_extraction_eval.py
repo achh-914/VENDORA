@@ -98,5 +98,4 @@ JOBS = [
 ]
 
 
-def main():
-    total_ok, total_n, failed = 0, 0, 0
+v
