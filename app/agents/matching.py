@@ -102,8 +102,15 @@ def match_documents(invoice: ExtractedDocument, po: ExtractedDocument) -> list[F
 
         po_line = po_lines.get(key)
         if po_line is None:
-            if _is_fee(line):
-                findings.append(
+            findings.append(
+                Finding(
+                    type=DiscrepancyType.UNAGREED_FEE,
+                    delta=round(line.amount, 2),
+                    summary=f"'{line.description}' is not in the purchase order",
+                    evidence=[_invoice_evidence(invoice, line), _po_evidence(po)],
+                )
+            )
+            continue
                     Finding(
                         type=DiscrepancyType.UNAGREED_FEE,
                         delta=round(line.amount, 2),
