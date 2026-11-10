@@ -45,8 +45,8 @@ Vendora does the investigation and hands the analyst a **case file**: what diffe
 |---|---|---|
 - [x] **M1: Extraction.** Structured extraction from invoice, PO and contract, with page references (tested with a mocked model, first real run pending)
 - [x] **M2: Matching.** Invoice vs PO comparison: price, quantity, duplicate and unagreed-fee detection
-| **Investigate** | Why, and which line or clause proves it? | Planned (M3) |
-| **Resolve** | What is the safest next step? | Planned (M3) |
+| **Investigate** | Why, and which line or clause proves it? | Done (M3) |
+| **Resolve** | What is the safest next step? | Done (M3) |
 | **Escalate** | Has a person approved it? | Planned (M5) |
 | **Audit** | Who decided what, based on which evidence? | Planned (M1 onward) |
 | **Evaluate** | How often is the system right? | Planned (M4) |
@@ -166,8 +166,8 @@ Results are published here after the first evaluation run.
 ## Roadmap
 
 - [x] **M1: Extraction.** Structured extraction from invoice, PO and contract, with page references
-- [ ] **M2: Matching.** Cross-document comparison and discrepancy detection
-- [ ] **M3: Investigation.** Root cause with cited evidence, proposed resolution, audit log
+- [x] **M2: Matching.** Cross-document comparison and discrepancy detection
+- [x] **M3: Investigation.** Root cause with cited evidence, proposed resolution, audit log
 - [ ] **M4: Evaluation.** 30 to 50 synthetic cases and automated scoring
 - [ ] **M5: Demo.** Review dashboard with the human approval flow and audit view
 - [ ] **Later:** Negotiation agent, compliance rules, dynamic routing, exports
