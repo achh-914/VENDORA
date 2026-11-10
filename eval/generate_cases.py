@@ -99,15 +99,15 @@ def write_invoice(path, c):
     inv = c["invoice"]
     s = [
         Paragraph("INVOICE", H1),
-        Paragraph("<b>%s</b>" % c["supplier"]["name"], BODY),
+        Paragraph("<b>{}</b>".format(c["supplier"]["name"]), BODY),
         Paragraph(c["supplier"]["address"], SMALL),
         Spacer(1, 8),
-        Paragraph("Invoice number: %s" % inv["number"], BODY),
-        Paragraph("Invoice date: %s" % inv["date"], BODY),
-        Paragraph("PO reference: %s" % inv["po_ref"], BODY),
-        Paragraph("Payment terms: %s" % inv["terms"], BODY),
+        Paragraph("Invoice number: {}".format(inv["number"]), BODY),
+        Paragraph("Invoice date: {}".format(inv["date"]), BODY),
+        Paragraph("PO reference: {}".format(inv["po_ref"]), BODY),
+        Paragraph("Payment terms: {}".format(inv["terms"]), BODY),
         Spacer(1, 6),
-        Paragraph("Bill to: %s, %s" % (BUYER["name"], BUYER["address"]), BODY),
+        Paragraph("Bill to: {}, {}".format(BUYER["name"], BUYER["address"]), BODY),
         Spacer(1, 12),
         lines_table(inv["lines"]),
     ]
@@ -120,14 +120,14 @@ def write_po(path, c):
     po = c["po"]
     s = [
         Paragraph("PURCHASE ORDER", H1),
-        Paragraph("<b>%s</b>" % BUYER["name"], BODY),
+        Paragraph("<b>{}</b>".format(BUYER["name"]), BODY),
         Paragraph(BUYER["address"], SMALL),
         Spacer(1, 8),
-        Paragraph("PO number: %s" % po["number"], BODY),
-        Paragraph("PO date: %s" % po["date"], BODY),
-        Paragraph("Supplier: %s" % c["supplier"]["name"], BODY),
-        Paragraph("Payment terms: %s" % po["terms"], BODY),
-        Paragraph("Contract reference: %s" % c["contract"]["number"], BODY),
+        Paragraph("PO number: {}".format(po["number"]), BODY),
+        Paragraph("PO date: {}".format(po["date"]), BODY),
+        Paragraph("Supplier: {}".format(c["supplier"]["name"]), BODY),
+        Paragraph("Payment terms: {}".format(po["terms"]), BODY),
+        Paragraph("Contract reference: {}".format(c["contract"]["number"]), BODY),
         Spacer(1, 12),
         lines_table(po["lines"]),
     ]
@@ -138,10 +138,10 @@ def write_contract(path, c):
     ct = c["contract"]
     s = [
         Paragraph(ct["title"], H1),
-        Paragraph("Agreement number: %s" % ct["number"], BODY),
-        Paragraph("Effective date: %s" % ct["effective"], BODY),
+        Paragraph("Agreement number: {}".format(ct["number"]), BODY),
+        Paragraph("Effective date: {}".format(ct["effective"]), BODY),
         Paragraph(
-            "Between %s (Buyer) and %s (Supplier)." % (BUYER["name"], c["supplier"]["name"]), BODY
+            "Between {} (Buyer) and {} (Supplier).".format(BUYER["name"], c["supplier"]["name"]), BODY
         ),
     ]
     page = 1
@@ -149,7 +149,7 @@ def write_contract(path, c):
         while cl["page"] > page:
             s.append(PageBreak())
             page += 1
-        s += [Paragraph("%s  %s" % (cl["ref"], cl["heading"]), H2), Paragraph(cl["text"], BODY)]
+        s += [Paragraph("{}  {}".format(cl["ref"], cl["heading"]), H2), Paragraph(cl["text"], BODY)]
     build(path, ct["title"] + " " + ct["number"], s)
 
 
@@ -501,7 +501,7 @@ def verify(c, folder):
     """Fail loudly if the ground truth does not match the generated PDFs."""
     exp = c["expected"]
     diff = round(total(c["invoice"]["lines"]) - total(c["po"]["lines"]), 2)
-    assert diff == exp["delta"], "%s: delta %s != %s" % (c["id"], diff, exp["delta"])
+    assert diff == exp["delta"], "{}: delta {} != {}".format(c["id"], diff, exp["delta"])
     if pdfplumber is None:
         return
     texts = {n: page_texts(folder / n) for n in ("invoice.pdf", "po.pdf", "contract.pdf")}
@@ -520,7 +520,7 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     manifest = []
     for c in CASES:
-        folder = OUT / ("%s_%s" % (c["id"], c["slug"]))
+        folder = OUT / ("{}_{}".format(c["id"], c["slug"]))
         folder.mkdir(parents=True, exist_ok=True)
         write_invoice(folder / "invoice.pdf", c)
         write_po(folder / "po.pdf", c)
