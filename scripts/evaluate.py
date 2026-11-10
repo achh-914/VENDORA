@@ -1,4 +1,5 @@
 """Evaluate issue detection on the synthetic dataset (ground truth is hidden from the detector)."""
+
 import json
 from collections import Counter, defaultdict
 from pathlib import Path

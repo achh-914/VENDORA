@@ -13,12 +13,7 @@ ITEMS = [
     ("Monitor", 210.0),
     ("Toner", 65.0),
 ]
-PLAN = (
-    ["clean"] * 10
-    + ["price_mismatch"] * 7
-    + ["quantity_mismatch"] * 7
-    + ["extra_charge"] * 6
-)
+PLAN = ["clean"] * 10 + ["price_mismatch"] * 7 + ["quantity_mismatch"] * 7 + ["extra_charge"] * 6
 
 
 def total(lines, shipping):
