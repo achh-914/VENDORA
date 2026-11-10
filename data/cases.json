@@ -1,0 +1,1082 @@
+[
+  {
+    "case_id": "CASE-001",
+    "purchase_order": {
+      "po_id": "PO-1001",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 5,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 600.0
+    },
+    "contract": {
+      "vendor": "Nord Logistics",
+      "pricing_clause": "Office chair: 120.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2001",
+      "po_id": "PO-1001",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 7,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 840.0
+    },
+    "expected_issue": "quantity_mismatch"
+  },
+  {
+    "case_id": "CASE-002",
+    "purchase_order": {
+      "po_id": "PO-1002",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 22,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 2640.0
+    },
+    "contract": {
+      "vendor": "Delta Supply",
+      "pricing_clause": "Office chair: 120.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2002",
+      "po_id": "PO-1002",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 22,
+          "unit_price": 126.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 2772.0
+    },
+    "expected_issue": "price_mismatch"
+  },
+  {
+    "case_id": "CASE-003",
+    "purchase_order": {
+      "po_id": "PO-1003",
+      "vendor": "Global Tech",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 11,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 1320.0
+    },
+    "contract": {
+      "vendor": "Global Tech",
+      "pricing_clause": "Office chair: 120.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2003",
+      "po_id": "PO-1003",
+      "vendor": "Global Tech",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 11,
+          "unit_price": 126.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 1386.0
+    },
+    "expected_issue": "price_mismatch"
+  },
+  {
+    "case_id": "CASE-004",
+    "purchase_order": {
+      "po_id": "PO-1004",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Laptop stand",
+          "qty": 27,
+          "unit_price": 40.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 1080.0
+    },
+    "contract": {
+      "vendor": "Delta Supply",
+      "pricing_clause": "Laptop stand: 40.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2004",
+      "po_id": "PO-1004",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Laptop stand",
+          "qty": 27,
+          "unit_price": 40.0
+        }
+      ],
+      "shipping": 250.0,
+      "total": 1330.0
+    },
+    "expected_issue": "extra_charge"
+  },
+  {
+    "case_id": "CASE-005",
+    "purchase_order": {
+      "po_id": "PO-1005",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 7,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 840.0
+    },
+    "contract": {
+      "vendor": "Nord Logistics",
+      "pricing_clause": "Office chair: 120.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2005",
+      "po_id": "PO-1005",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 11,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 1320.0
+    },
+    "expected_issue": "quantity_mismatch"
+  },
+  {
+    "case_id": "CASE-006",
+    "purchase_order": {
+      "po_id": "PO-1006",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "Laptop stand",
+          "qty": 29,
+          "unit_price": 40.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 1160.0
+    },
+    "contract": {
+      "vendor": "Nord Logistics",
+      "pricing_clause": "Laptop stand: 40.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2006",
+      "po_id": "PO-1006",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "Laptop stand",
+          "qty": 29,
+          "unit_price": 40.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 1160.0
+    },
+    "expected_issue": "clean"
+  },
+  {
+    "case_id": "CASE-007",
+    "purchase_order": {
+      "po_id": "PO-1007",
+      "vendor": "ABC Supplies",
+      "lines": [
+        {
+          "item": "Toner",
+          "qty": 23,
+          "unit_price": 65.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 1495.0
+    },
+    "contract": {
+      "vendor": "ABC Supplies",
+      "pricing_clause": "Toner: 65.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2007",
+      "po_id": "PO-1007",
+      "vendor": "ABC Supplies",
+      "lines": [
+        {
+          "item": "Toner",
+          "qty": 23,
+          "unit_price": 65.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 1495.0
+    },
+    "expected_issue": "clean"
+  },
+  {
+    "case_id": "CASE-008",
+    "purchase_order": {
+      "po_id": "PO-1008",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 41,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 4920.0
+    },
+    "contract": {
+      "vendor": "Nord Logistics",
+      "pricing_clause": "Office chair: 120.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2008",
+      "po_id": "PO-1008",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 41,
+          "unit_price": 126.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 5166.0
+    },
+    "expected_issue": "price_mismatch"
+  },
+  {
+    "case_id": "CASE-009",
+    "purchase_order": {
+      "po_id": "PO-1009",
+      "vendor": "ABC Supplies",
+      "lines": [
+        {
+          "item": "Laptop stand",
+          "qty": 47,
+          "unit_price": 40.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 1880.0
+    },
+    "contract": {
+      "vendor": "ABC Supplies",
+      "pricing_clause": "Laptop stand: 40.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2009",
+      "po_id": "PO-1009",
+      "vendor": "ABC Supplies",
+      "lines": [
+        {
+          "item": "Laptop stand",
+          "qty": 47,
+          "unit_price": 42.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 1974.0
+    },
+    "expected_issue": "price_mismatch"
+  },
+  {
+    "case_id": "CASE-010",
+    "purchase_order": {
+      "po_id": "PO-1010",
+      "vendor": "Metro Goods",
+      "lines": [
+        {
+          "item": "Laptop stand",
+          "qty": 19,
+          "unit_price": 40.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 760.0
+    },
+    "contract": {
+      "vendor": "Metro Goods",
+      "pricing_clause": "Laptop stand: 40.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2010",
+      "po_id": "PO-1010",
+      "vendor": "Metro Goods",
+      "lines": [
+        {
+          "item": "Laptop stand",
+          "qty": 19,
+          "unit_price": 42.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 798.0
+    },
+    "expected_issue": "price_mismatch"
+  },
+  {
+    "case_id": "CASE-011",
+    "purchase_order": {
+      "po_id": "PO-1011",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 34,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 4080.0
+    },
+    "contract": {
+      "vendor": "Delta Supply",
+      "pricing_clause": "Office chair: 120.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2011",
+      "po_id": "PO-1011",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 34,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 4080.0
+    },
+    "expected_issue": "clean"
+  },
+  {
+    "case_id": "CASE-012",
+    "purchase_order": {
+      "po_id": "PO-1012",
+      "vendor": "Metro Goods",
+      "lines": [
+        {
+          "item": "USB-C cable",
+          "qty": 28,
+          "unit_price": 8.5
+        }
+      ],
+      "shipping": 0.0,
+      "total": 238.0
+    },
+    "contract": {
+      "vendor": "Metro Goods",
+      "pricing_clause": "USB-C cable: 8.50 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2012",
+      "po_id": "PO-1012",
+      "vendor": "Metro Goods",
+      "lines": [
+        {
+          "item": "USB-C cable",
+          "qty": 28,
+          "unit_price": 8.5
+        }
+      ],
+      "shipping": 250.0,
+      "total": 488.0
+    },
+    "expected_issue": "extra_charge"
+  },
+  {
+    "case_id": "CASE-013",
+    "purchase_order": {
+      "po_id": "PO-1013",
+      "vendor": "Global Tech",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 49,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 5880.0
+    },
+    "contract": {
+      "vendor": "Global Tech",
+      "pricing_clause": "Office chair: 120.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2013",
+      "po_id": "PO-1013",
+      "vendor": "Global Tech",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 49,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 400.0,
+      "total": 6280.0
+    },
+    "expected_issue": "extra_charge"
+  },
+  {
+    "case_id": "CASE-014",
+    "purchase_order": {
+      "po_id": "PO-1014",
+      "vendor": "ABC Supplies",
+      "lines": [
+        {
+          "item": "Toner",
+          "qty": 45,
+          "unit_price": 65.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 2925.0
+    },
+    "contract": {
+      "vendor": "ABC Supplies",
+      "pricing_clause": "Toner: 65.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2014",
+      "po_id": "PO-1014",
+      "vendor": "ABC Supplies",
+      "lines": [
+        {
+          "item": "Toner",
+          "qty": 47,
+          "unit_price": 65.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 3055.0
+    },
+    "expected_issue": "quantity_mismatch"
+  },
+  {
+    "case_id": "CASE-015",
+    "purchase_order": {
+      "po_id": "PO-1015",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "USB-C cable",
+          "qty": 15,
+          "unit_price": 8.5
+        }
+      ],
+      "shipping": 0.0,
+      "total": 127.5
+    },
+    "contract": {
+      "vendor": "Nord Logistics",
+      "pricing_clause": "USB-C cable: 8.50 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2015",
+      "po_id": "PO-1015",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "USB-C cable",
+          "qty": 15,
+          "unit_price": 9.35
+        }
+      ],
+      "shipping": 0.0,
+      "total": 140.25
+    },
+    "expected_issue": "price_mismatch"
+  },
+  {
+    "case_id": "CASE-016",
+    "purchase_order": {
+      "po_id": "PO-1016",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 45,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 5400.0
+    },
+    "contract": {
+      "vendor": "Delta Supply",
+      "pricing_clause": "Office chair: 120.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2016",
+      "po_id": "PO-1016",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 45,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 400.0,
+      "total": 5800.0
+    },
+    "expected_issue": "extra_charge"
+  },
+  {
+    "case_id": "CASE-017",
+    "purchase_order": {
+      "po_id": "PO-1017",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "USB-C cable",
+          "qty": 48,
+          "unit_price": 8.5
+        }
+      ],
+      "shipping": 0.0,
+      "total": 408.0
+    },
+    "contract": {
+      "vendor": "Nord Logistics",
+      "pricing_clause": "USB-C cable: 8.50 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2017",
+      "po_id": "PO-1017",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "USB-C cable",
+          "qty": 48,
+          "unit_price": 8.5
+        }
+      ],
+      "shipping": 0.0,
+      "total": 408.0
+    },
+    "expected_issue": "clean"
+  },
+  {
+    "case_id": "CASE-018",
+    "purchase_order": {
+      "po_id": "PO-1018",
+      "vendor": "Metro Goods",
+      "lines": [
+        {
+          "item": "Laptop stand",
+          "qty": 19,
+          "unit_price": 40.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 760.0
+    },
+    "contract": {
+      "vendor": "Metro Goods",
+      "pricing_clause": "Laptop stand: 40.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2018",
+      "po_id": "PO-1018",
+      "vendor": "Metro Goods",
+      "lines": [
+        {
+          "item": "Laptop stand",
+          "qty": 19,
+          "unit_price": 42.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 798.0
+    },
+    "expected_issue": "price_mismatch"
+  },
+  {
+    "case_id": "CASE-019",
+    "purchase_order": {
+      "po_id": "PO-1019",
+      "vendor": "Metro Goods",
+      "lines": [
+        {
+          "item": "Monitor",
+          "qty": 22,
+          "unit_price": 210.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 4620.0
+    },
+    "contract": {
+      "vendor": "Metro Goods",
+      "pricing_clause": "Monitor: 210.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2019",
+      "po_id": "PO-1019",
+      "vendor": "Metro Goods",
+      "lines": [
+        {
+          "item": "Monitor",
+          "qty": 23,
+          "unit_price": 210.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 4830.0
+    },
+    "expected_issue": "quantity_mismatch"
+  },
+  {
+    "case_id": "CASE-020",
+    "purchase_order": {
+      "po_id": "PO-1020",
+      "vendor": "Global Tech",
+      "lines": [
+        {
+          "item": "Toner",
+          "qty": 50,
+          "unit_price": 65.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 3250.0
+    },
+    "contract": {
+      "vendor": "Global Tech",
+      "pricing_clause": "Toner: 65.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2020",
+      "po_id": "PO-1020",
+      "vendor": "Global Tech",
+      "lines": [
+        {
+          "item": "Toner",
+          "qty": 50,
+          "unit_price": 65.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 3250.0
+    },
+    "expected_issue": "clean"
+  },
+  {
+    "case_id": "CASE-021",
+    "purchase_order": {
+      "po_id": "PO-1021",
+      "vendor": "Metro Goods",
+      "lines": [
+        {
+          "item": "USB-C cable",
+          "qty": 46,
+          "unit_price": 8.5
+        }
+      ],
+      "shipping": 0.0,
+      "total": 391.0
+    },
+    "contract": {
+      "vendor": "Metro Goods",
+      "pricing_clause": "USB-C cable: 8.50 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2021",
+      "po_id": "PO-1021",
+      "vendor": "Metro Goods",
+      "lines": [
+        {
+          "item": "USB-C cable",
+          "qty": 50,
+          "unit_price": 8.5
+        }
+      ],
+      "shipping": 0.0,
+      "total": 425.0
+    },
+    "expected_issue": "quantity_mismatch"
+  },
+  {
+    "case_id": "CASE-022",
+    "purchase_order": {
+      "po_id": "PO-1022",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Monitor",
+          "qty": 14,
+          "unit_price": 210.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 2940.0
+    },
+    "contract": {
+      "vendor": "Delta Supply",
+      "pricing_clause": "Monitor: 210.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2022",
+      "po_id": "PO-1022",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Monitor",
+          "qty": 14,
+          "unit_price": 210.0
+        }
+      ],
+      "shipping": 250.0,
+      "total": 3190.0
+    },
+    "expected_issue": "extra_charge"
+  },
+  {
+    "case_id": "CASE-023",
+    "purchase_order": {
+      "po_id": "PO-1023",
+      "vendor": "Global Tech",
+      "lines": [
+        {
+          "item": "USB-C cable",
+          "qty": 40,
+          "unit_price": 8.5
+        }
+      ],
+      "shipping": 0.0,
+      "total": 340.0
+    },
+    "contract": {
+      "vendor": "Global Tech",
+      "pricing_clause": "USB-C cable: 8.50 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2023",
+      "po_id": "PO-1023",
+      "vendor": "Global Tech",
+      "lines": [
+        {
+          "item": "USB-C cable",
+          "qty": 40,
+          "unit_price": 8.5
+        }
+      ],
+      "shipping": 0.0,
+      "total": 340.0
+    },
+    "expected_issue": "clean"
+  },
+  {
+    "case_id": "CASE-024",
+    "purchase_order": {
+      "po_id": "PO-1024",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 42,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 5040.0
+    },
+    "contract": {
+      "vendor": "Nord Logistics",
+      "pricing_clause": "Office chair: 120.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2024",
+      "po_id": "PO-1024",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "Office chair",
+          "qty": 42,
+          "unit_price": 120.0
+        }
+      ],
+      "shipping": 250.0,
+      "total": 5290.0
+    },
+    "expected_issue": "extra_charge"
+  },
+  {
+    "case_id": "CASE-025",
+    "purchase_order": {
+      "po_id": "PO-1025",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "Monitor",
+          "qty": 28,
+          "unit_price": 210.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 5880.0
+    },
+    "contract": {
+      "vendor": "Nord Logistics",
+      "pricing_clause": "Monitor: 210.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2025",
+      "po_id": "PO-1025",
+      "vendor": "Nord Logistics",
+      "lines": [
+        {
+          "item": "Monitor",
+          "qty": 28,
+          "unit_price": 210.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 5880.0
+    },
+    "expected_issue": "clean"
+  },
+  {
+    "case_id": "CASE-026",
+    "purchase_order": {
+      "po_id": "PO-1026",
+      "vendor": "Global Tech",
+      "lines": [
+        {
+          "item": "USB-C cable",
+          "qty": 37,
+          "unit_price": 8.5
+        }
+      ],
+      "shipping": 0.0,
+      "total": 314.5
+    },
+    "contract": {
+      "vendor": "Global Tech",
+      "pricing_clause": "USB-C cable: 8.50 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2026",
+      "po_id": "PO-1026",
+      "vendor": "Global Tech",
+      "lines": [
+        {
+          "item": "USB-C cable",
+          "qty": 37,
+          "unit_price": 8.5
+        }
+      ],
+      "shipping": 0.0,
+      "total": 314.5
+    },
+    "expected_issue": "clean"
+  },
+  {
+    "case_id": "CASE-027",
+    "purchase_order": {
+      "po_id": "PO-1027",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Laptop stand",
+          "qty": 8,
+          "unit_price": 40.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 320.0
+    },
+    "contract": {
+      "vendor": "Delta Supply",
+      "pricing_clause": "Laptop stand: 40.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2027",
+      "po_id": "PO-1027",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Laptop stand",
+          "qty": 9,
+          "unit_price": 40.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 360.0
+    },
+    "expected_issue": "quantity_mismatch"
+  },
+  {
+    "case_id": "CASE-028",
+    "purchase_order": {
+      "po_id": "PO-1028",
+      "vendor": "Global Tech",
+      "lines": [
+        {
+          "item": "USB-C cable",
+          "qty": 48,
+          "unit_price": 8.5
+        }
+      ],
+      "shipping": 0.0,
+      "total": 408.0
+    },
+    "contract": {
+      "vendor": "Global Tech",
+      "pricing_clause": "USB-C cable: 8.50 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2028",
+      "po_id": "PO-1028",
+      "vendor": "Global Tech",
+      "lines": [
+        {
+          "item": "USB-C cable",
+          "qty": 48,
+          "unit_price": 8.5
+        }
+      ],
+      "shipping": 0.0,
+      "total": 408.0
+    },
+    "expected_issue": "clean"
+  },
+  {
+    "case_id": "CASE-029",
+    "purchase_order": {
+      "po_id": "PO-1029",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Toner",
+          "qty": 9,
+          "unit_price": 65.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 585.0
+    },
+    "contract": {
+      "vendor": "Delta Supply",
+      "pricing_clause": "Toner: 65.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2029",
+      "po_id": "PO-1029",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Toner",
+          "qty": 9,
+          "unit_price": 65.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 585.0
+    },
+    "expected_issue": "clean"
+  },
+  {
+    "case_id": "CASE-030",
+    "purchase_order": {
+      "po_id": "PO-1030",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Monitor",
+          "qty": 43,
+          "unit_price": 210.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 9030.0
+    },
+    "contract": {
+      "vendor": "Delta Supply",
+      "pricing_clause": "Monitor: 210.00 per unit",
+      "shipping_clause": "Shipping is not charged unless agreed in writing"
+    },
+    "invoice": {
+      "invoice_id": "INV-2030",
+      "po_id": "PO-1030",
+      "vendor": "Delta Supply",
+      "lines": [
+        {
+          "item": "Monitor",
+          "qty": 47,
+          "unit_price": 210.0
+        }
+      ],
+      "shipping": 0.0,
+      "total": 9870.0
+    },
+    "expected_issue": "quantity_mismatch"
+  }
+]
