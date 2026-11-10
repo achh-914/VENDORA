@@ -103,9 +103,7 @@ def _extract_gemini(pdf_path, client=None, model=None) -> ExtractedDocument:
     response = client.models.generate_content(
         model=model,
         contents=[
-            types.Part.from_bytes(
-                data=Path(pdf_path).read_bytes(), mime_type="application/pdf"
-            ),
+            types.Part.from_bytes(data=Path(pdf_path).read_bytes(), mime_type="application/pdf"),
             PROMPT,
         ],
         config=types.GenerateContentConfig(
@@ -121,9 +119,7 @@ def _extract_gemini(pdf_path, client=None, model=None) -> ExtractedDocument:
     return ExtractedDocument.model_validate(response.parsed)
 
 
-def extract_document(
-    pdf_path, client=None, model=None, provider=None
-) -> ExtractedDocument:
+def extract_document(pdf_path, client=None, model=None, provider=None) -> ExtractedDocument:
     provider = provider or os.getenv("VENDORA_PROVIDER", "gemini")
     if provider == "claude":
         return _extract_claude(pdf_path, client, model)
