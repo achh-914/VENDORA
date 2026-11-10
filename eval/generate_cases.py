@@ -1,4 +1,4 @@
-# ruff: noqa: UP031, UP032
+# ruff: noqa: UP031, C408
 """Generate the Vendora evaluation cases.
 
 Each case is a folder with three synthetic PDFs (invoice, PO, contract) and an
