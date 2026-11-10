@@ -131,4 +131,4 @@ def extract_document(
 
 
 if __name__ == "__main__":
-    print(extract_document(sys.arg
+    print(extract_document(sys.argv[1]).model_dump_json(indent=2))
