@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "AI agents that investigate invoice, PO, and contract mismatches with evidence."
 readme = "README.md"
 requires-python = ">=3.12"
-license = { text = "MIT" }
+license = "MIT"
 dependencies = [
     "anthropic>=0.40",
     "fastapi>=0.110",
