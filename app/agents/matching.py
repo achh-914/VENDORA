@@ -8,8 +8,6 @@ from pydantic import BaseModel
 from app.agents.extraction import ExtractedDocument, ExtractedLine
 from app.schemas import DiscrepancyType, Evidence
 
-FEE_WORDS = ("freight", "shipping", "handling", "surcharge", "delivery", "fee")
-
 
 class Finding(BaseModel):
     type: DiscrepancyType
@@ -20,10 +18,6 @@ class Finding(BaseModel):
 
 def _key(line: ExtractedLine) -> str:
     return line.description.split(" - ")[0].strip().lower()
-
-
-def _is_fee(line: ExtractedLine) -> bool:
-    return any(word in line.description.lower() for word in FEE_WORDS)
 
 
 def _invoice_evidence(invoice: ExtractedDocument, line: ExtractedLine) -> Evidence:
@@ -110,14 +104,6 @@ def match_documents(invoice: ExtractedDocument, po: ExtractedDocument) -> list[F
                     evidence=[_invoice_evidence(invoice, line), _po_evidence(po)],
                 )
             )
-            continue
-                    Finding(
-                        type=DiscrepancyType.UNAGREED_FEE,
-                        delta=round(line.amount, 2),
-                        summary=f"'{line.description}' is not in the purchase order",
-                        evidence=[_invoice_evidence(invoice, line), _po_evidence(po)],
-                    )
-                )
             continue
 
         findings.extend(_compare_lines(invoice, po, line, po_line))
