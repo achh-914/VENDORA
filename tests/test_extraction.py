@@ -34,7 +34,7 @@ def test_extract_invoice(tmp_path):
     }
     client = FakeClient([_tool_block(payload)])
 
-    doc = extract_document(pdf, client=client)
+doc = extract_document(pdf, client=client, provider="claude")
 
     assert doc.total == 18000.0
     assert doc.lines[0].description == "Freight surcharge"
@@ -47,4 +47,4 @@ def test_extract_raises_without_tool_output(tmp_path):
     pdf.write_bytes(b"%PDF-1.4 fake")
     client = FakeClient([SimpleNamespace(type="text", text="hello")])
     with pytest.raises(ValueError):
-        extract_document(pdf, client=client)
+extract_document(pdf, client=client, provider="claude")
