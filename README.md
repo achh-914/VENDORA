@@ -13,7 +13,7 @@
   <img alt="status" src="https://img.shields.io/badge/status-early%20development-e11d48?style=flat-square">
   <img alt="python" src="https://img.shields.io/badge/python-3.12-3776ab?style=flat-square">
   <img alt="fastapi" src="https://img.shields.io/badge/API-FastAPI-009688?style=flat-square">
-  <img alt="llm" src="https://img.shields.io/badge/LLM-Claude-d97706?style=flat-square">
+  <img alt="llm" src="https://img.shields.io/badge/LLM-Gemini-4285f4?style=flat-square">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-16a34a?style=flat-square">
   <img alt="schema" src="https://github.com/achh-914/VENDORA/actions/workflows/schema.yml/badge.svg">
 <a href="https://github.com/achh-914/VENDORA/actions/workflows/ci.yml"><img src="https://github.com/achh-914/VENDORA/actions/workflows/ci.yml/badge.svg" alt="ci"></a>
@@ -49,7 +49,7 @@ Vendora does the investigation and hands the analyst a **case file**: what diffe
 | **Resolve** | What is the safest next step? | Done (M3) |
 | **Escalate** | Has a person approved it? | Planned (M5) |
 | **Audit** | Who decided what, based on which evidence? | Planned (M1 onward) |
-| **Evaluate** | How often is the system right? | Planned (M4) |
+| **Evaluate** | How often is the system right? | Done (M4) |
 
 ---
 
@@ -108,7 +108,7 @@ These are the categories the evaluation set is built around.
 
 ## Terminal preview
 
-Illustrative target experience. Not implemented yet.
+Real output from the three sample PDFs.
 
 ```text
 $ vendora analyze --invoice inv-2041.pdf --po po-4471.pdf --contract msa-acme.pdf
