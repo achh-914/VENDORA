@@ -164,15 +164,11 @@ def _ftype(finding):
 
 def _cites_fee_clause(case_file):
     evidence = getattr(case_file, "evidence", None) or []
-    return any(
-        e.doc == CONTRACT.doc_id and e.page == 2 and "4.2" in e.ref for e in evidence
-    )
+    return any(e.doc == CONTRACT.doc_id and e.page == 2 and "4.2" in e.ref for e in evidence)
 
 
 def evaluate(seed=7, per_scenario=8):
-    stats = dict.fromkeys(
-        ["cases", "detect", "delta", "delta_n", "cite", "cite_n", "approval"], 0
-    )
+    stats = dict.fromkeys(["cases", "detect", "delta", "delta_n", "cite", "cite_n", "approval"], 0)
     by_scenario = {name: [0, 0] for name in SCENARIOS}
     failures = []
 
