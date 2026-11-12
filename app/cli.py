@@ -9,6 +9,7 @@ import sys
 import time
 from pathlib import Path
 
+import httpx
 from google.genai import errors as genai_errors
 
 from app.agents.extraction import ExtractedDocument, extract_document
@@ -17,6 +18,11 @@ from app.agents.matching import CURRENCY_SYMBOLS, match_documents
 from app.schemas import CaseFile
 
 RETRIES = 3
+DEFAULT_SERVER = "http://127.0.0.1:8000"
+
+
+class SubmitError(RuntimeError):
+    """The case could not be sent to the review server."""
 
 
 def load_document(path: str) -> ExtractedDocument:
@@ -59,6 +65,22 @@ def render_case(case: CaseFile, currency: str) -> str:
     return "\n".join(lines)
 
 
+def submit_case(case: CaseFile, server: str) -> str:
+    """Send a case to the review server. Returns a short status message."""
+    url = f"{server.rstrip('/')}/cases"
+    try:
+        response = httpx.post(url, json=case.model_dump(mode="json"), timeout=10)
+    except httpx.HTTPError as exc:
+        raise SubmitError(
+            f"cannot reach {server} ({type(exc).__name__}). Start it with: uvicorn app.main:app"
+        ) from exc
+    if response.status_code == 201:
+        return "submitted for review"
+    if response.status_code == 409:
+        return "already in the review queue"
+    raise SubmitError(f"the server answered {response.status_code}")
+
+
 def analyze(args: argparse.Namespace) -> int:
     print("Extracting documents...", file=sys.stderr)
     invoice = load_document(args.invoice)
@@ -67,23 +89,28 @@ def analyze(args: argparse.Namespace) -> int:
 
     findings = match_documents(invoice, po)
     cases = [
-        investigate(finding, contract, case_id=f"CASE-{index:04d}")
+        investigate(finding, contract, case_id=f"{invoice.doc_id}-{index:02d}")
         for index, finding in enumerate(findings, start=1)
     ]
 
     if args.json:
         print(json.dumps([case.model_dump(mode="json") for case in cases], indent=2))
-        return 0
+    else:
+        print(f"Extracted 3 documents: {invoice.doc_id}, {po.doc_id}, {contract.doc_id}")
+        if not cases:
+            print("No discrepancies found.")
+        else:
+            print(f"{len(cases)} discrepancy(ies) found")
+            currency = _currency_label(invoice)
+            for case in cases:
+                print()
+                print(render_case(case, currency))
 
-    print(f"Extracted 3 documents: {invoice.doc_id}, {po.doc_id}, {contract.doc_id}")
-    if not cases:
-        print("No discrepancies found.")
-        return 0
-    print(f"{len(cases)} discrepancy(ies) found")
-    currency = _currency_label(invoice)
-    for case in cases:
-        print()
-        print(render_case(case, currency))
+    if args.submit and cases:
+        for case in cases:
+            message = submit_case(case, args.server)
+            print(f"-> {case.case_id}: {message}", file=sys.stderr)
+        print(f"Review it at {args.server.rstrip('/')}/review", file=sys.stderr)
     return 0
 
 
@@ -96,6 +123,8 @@ def build_parser() -> argparse.ArgumentParser:
     cmd.add_argument("--po", required=True, help="purchase order PDF or extracted JSON")
     cmd.add_argument("--contract", required=True, help="contract PDF or extracted JSON")
     cmd.add_argument("--json", action="store_true", help="print case files as JSON")
+    cmd.add_argument("--submit", action="store_true", help="send the cases to the review server")
+    cmd.add_argument("--server", default=DEFAULT_SERVER, help="review server URL")
     cmd.set_defaults(func=analyze)
     return parser
 
@@ -107,6 +136,9 @@ def main(argv: list[str] | None = None) -> int:
     except FileNotFoundError as exc:
         print(f"error: file not found: {exc}", file=sys.stderr)
         return 2
+    except SubmitError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 3
 
 
 if __name__ == "__main__":
