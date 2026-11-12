@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vendora review</title>
+<style>
+:root{--bg:#f4f6fb;--surface:#fff;--text:#162033;--muted:#5b6b86;--line:#dfe5ef;--teal:#0f766e;--teal-soft:#dff3f0;--amber:#b45309;--amber-soft:#fef3c7;--rose:#be123c;--rose-soft:#ffe4ea;--sky:#1d4ed8;--sky-soft:#e0e9ff;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1628;--surface:#162038;--text:#e8edf7;--muted:#8d9bb8;--line:#2b3a5a;--teal:#2dd4bf;--teal-soft:#0f3a37;--amber:#fbbf24;--amber-soft:#3a2d0a;--rose:#fb7185;--rose-soft:#3d1522;--sky:#93b4ff;--sky-soft:#14284f}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--surface)}
+.top h1{margin:0;font-size:18px}.top h1 span{color:var(--muted);font-weight:400}
+.layout{display:grid;grid-template-columns:minmax(250px,320px) 1fr;gap:16px;max-width:1100px;margin:0 auto;padding:16px}
+@media (max-width:800px){.layout{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.card h2{margin:0;font-size:20px}.card h3{margin:18px 0 6px;font-size:13px;color:var(--muted);font-weight:600}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.muted{color:var(--muted)}.note{font-size:13px;color:var(--muted);margin:6px 0}
+#list{padding:8px}
+.item{display:block;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:10px;padding:10px;color:inherit;font:inherit;cursor:pointer}
+.item:hover{background:var(--bg)}.item[aria-current=true]{border-color:var(--teal);background:var(--teal-soft)}
+.item .meta{font-size:12.5px;color:var(--muted)}
+.chip{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12px;font-weight:600;background:var(--sky-soft);color:var(--sky)}
+.chip.warn{background:var(--amber-soft);color:var(--amber)}.chip.ok{background:var(--teal-soft);color:var(--teal)}.chip.bad{background:var(--rose-soft);color:var(--rose)}
+.delta{margin:6px 0 0}
+.evidence{margin:0;padding-left:20px}.evidence li{margin:6px 0}
+.doc{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;margin-right:8px}
+.page{color:var(--muted);font-size:13px;margin-right:8px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.decision{border:2px solid var(--amber)}.decision h3{color:var(--amber);margin-top:0;font-size:15px}
+label{display:block;font-size:13px;margin:12px 0 4px;color:var(--muted)}
+input,textarea{width:100%;font:inherit;color:inherit;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px}
+textarea{min-height:64px;resize:vertical}
+.btn{font:inherit;font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:8px 14px;cursor:pointer}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+@media (prefers-color-scheme:dark){.btn.primary{color:#062a27}}
+.btn.danger{border-color:var(--rose);color:var(--rose)}.btn.ghost{background:none}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible,.item:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+.timeline{list-style:none;margin:8px 0 0;padding:0}
+.timeline li{padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.timeline .when{display:block;font-size:12px;color:var(--muted)}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.show{opacity:1}#toast.err{background:var(--rose);color:#fff}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Vendora <span>review</span></h1>
+  <button id="demo" class="btn ghost" type="button">Add demo case</button>
+</header>
+<main class="layout">
+  <nav id="list" class="card" aria-label="Cases"></nav>
+  <section id="detail" aria-live="polite"></section>
+</main>
+<div id="toast" role="status"></div>
+<script>
+const $ = (selector) => document.querySelector(selector);
+const nf = new Intl.NumberFormat("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const FINDING = {"PRICE-MISMATCH": "Price mismatch", "UNAGREED-FEE": "Unagreed fee", "QTY-VARIANCE": "Quantity variance", "DUPLICATE-LINE": "Duplicate line", "TERMS-CONFLICT": "Terms conflict"};
+const ACTION = {HOLD_INVOICE: "Hold the invoice", DRAFT_SUPPLIER_MESSAGE: "Draft a message to the supplier", ESCALATE: "Escalate to the owner"};
+const STATUS = {awaiting_approval: ["Awaiting approval", "warn"], approved: ["Approved", "ok"], rejected: ["Rejected", "bad"], changes_requested: ["Changes requested", ""]};
+const EVENT = {case_created: "Case created", decision_approved: "Approved", decision_rejected: "Rejected", decision_changes_requested: "Changes requested", action_simulated: "Action simulated"};
+let selected = location.hash.slice(1) || null;
+let lastName = "";
+
+// Document content is untrusted: build the page with text nodes only, never innerHTML.
+function el(tag, props = {}, ...kids) {
+  const node = document.createElement(tag);
+  for (const [key, value] of Object.entries(props)) {
+    if (key === "class") node.className = value;
+    else if (key.startsWith("on")) node.addEventListener(key.slice(2), value);
+    else node.setAttribute(key, value);
+  }
+  for (const kid of kids) node.append(kid);
+  return node;
+}
+function chip(status) {
+  const [text, kind] = STATUS[status] || [status, ""];
+  return el("span", {class: ("chip " + kind).trim()}, text);
+}
+function toast(message, isError = false) {
+  const box = $("#toast");
+  box.textContent = message;
+  box.className = "show" + (isError ? " err" : "");
+  setTimeout(() => { box.className = ""; }, 3500);
+}
+async function api(path, options) {
+  const res = await fetch(path, options);
+  if (!res.ok) {
+    let message = res.statusText;
+    try {
+      const body = await res.json();
+      message = typeof body.detail === "string" ? body.detail : "Invalid input";
+    } catch (_) { /* keep the status text */ }
+    throw new Error(message);
+  }
+  return res.json();
+}
+function renderList(items) {
+  const list = $("#list");
+  if (!items.length) {
+    list.replaceChildren(el("p", {class: "muted"}, "No cases yet. Add the demo case to see how a review works."));
+    return;
+  }
+  list.replaceChildren(...items.map((item) => el("button", {
+    class: "item", type: "button", "aria-current": String(item.case_id === selected),
+    onclick: () => select(item.case_id),
+  },
+    el("div", {class: "row"}, el("strong", {}, FINDING[item.finding] || item.finding), chip(item.status)),
+    el("div", {class: "meta"}, nf.format(item.delta) + " | " + item.case_id + (item.source === "demo" ? " | demo" : "")),
+  )));
+}
+function evidenceList(evidence) {
+  return el("ol", {class: "evidence"}, ...evidence.map((ev) => el("li", {},
+    el("span", {class: "doc"}, ev.doc), el("span", {class: "page"}, "p." + ev.page), el("span", {}, ev.ref))));
+}
+function actionsBlock(actions) {
+  if (!actions.length) return el("p", {class: "muted"}, "None proposed.");
+  return el("div", {},
+    el("div", {class: "actions"}, ...actions.map((a) => el("span", {class: "chip"}, ACTION[a] || a))),
+    el("p", {class: "note"}, "Simulated in the MVP. Nothing is sent, held or paid."));
+}
+function decisionCard(record) {
+  if (record.status === "approved" || record.status === "rejected") {
+    return el("div", {class: "card"}, el("h3", {}, "Decision"), el("p", {}, "This case is closed."));
+  }
+  const who = el("input", {id: "who", type: "text", maxlength: "80", autocomplete: "name"});
+  who.value = lastName;
+  const note = el("textarea", {id: "note", maxlength: "2000"});
+  const button = (label, kind, decision) => el("button", {class: "btn " + kind, type: "button", onclick: () => decide(decision)}, label);
+  return el("div", {class: "card decision"},
+    el("h3", {}, "Your decision"),
+    el("p", {class: "note"}, "Nothing is approved or paid without a person."),
+    el("label", {for: "who"}, "Your name"), who,
+    el("label", {for: "note"}, "Comment (optional)"), note,
+    el("div", {class: "actions"},
+      button("Approve", "primary", "approved"),
+      button("Request changes", "", "changes_requested"),
+      button("Reject", "danger", "rejected")));
+}
+function auditCard(audit) {
+  const rows = audit.events.map((e) => {
+    let text = EVENT[e.event] || e.event;
+    if (e.event === "action_simulated") text += ": " + (ACTION[e.detail.action] || e.detail.action) + " (simulated)";
+    if (e.detail && e.detail.comment) text += ". " + e.detail.comment;
+    return el("li", {}, el("span", {class: "when"}, new Date(e.at).toLocaleString() + " | " + e.actor_type + " | " + e.actor), text);
+  });
+  return el("div", {class: "card"},
+    el("div", {class: "row"}, el("h3", {style: "margin:0"}, "Audit trail"),
+      el("span", {class: "chip " + (audit.chain_ok ? "ok" : "bad")}, audit.chain_ok ? "Chain verified" : "Chain broken")),
+    el("ul", {class: "timeline"}, ...rows));
+}
+function renderDetail(record, audit) {
+  const c = record.case;
+  $("#detail").replaceChildren(
+    el("div", {class: "card"},
+      el("div", {class: "row"}, el("h2", {}, FINDING[c.finding] || c.finding), chip(record.status)),
+      el("p", {class: "delta"}, "Difference: ", el("strong", {}, nf.format(c.delta))),
+      el("p", {class: "note"}, "Case " + c.case_id + (record.source === "demo" ? ". Demo data, not produced by the pipeline." : "")),
+      el("h3", {}, "Evidence"), evidenceList(c.evidence),
+      el("h3", {}, "Proposed actions"), actionsBlock(c.proposed_action || [])),
+    decisionCard(record),
+    auditCard(audit));
+}
+async function showCase(id) {
+  const base = "/cases/" + encodeURIComponent(id);
+  const [record, audit] = await Promise.all([api(base), api(base + "/audit")]);
+  renderDetail(record, audit);
+}
+async function select(id) {
+  selected = id;
+  location.hash = id;
+  await refresh();
+}
+async function refresh() {
+  const items = await api("/cases");
+  if (!items.some((item) => item.case_id === selected)) selected = items.length ? items[0].case_id : null;
+  renderList(items);
+  if (selected) await showCase(selected);
+  else $("#detail").replaceChildren();
+}
+async function decide(decision) {
+  const name = $("#who").value.trim();
+  if (!name) { toast("Enter your name before deciding.", true); $("#who").focus(); return; }
+  lastName = name;
+  try {
+    await api("/cases/" + encodeURIComponent(selected) + "/decision", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({decision, decided_by: name, comment: $("#note").value.trim()}),
+    });
+    toast("Decision recorded.");
+    await refresh();
+  } catch (error) { toast(error.message, true); }
+}
+$("#demo").addEventListener("click", async () => {
+  try { await api("/demo/case", {method: "POST"}); toast("Demo case added."); }
+  catch (error) { toast(error.message, true); }
+  selected = "DEMO-SAMPLE";
+  await refresh().catch((error) => toast(error.message, true));
+});
+refresh().catch((error) => toast(error.message, true));
+</script>
+</body>
+</html>
