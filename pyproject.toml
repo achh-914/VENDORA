@@ -23,6 +23,10 @@ dev = [
     "httpx>=0.27",
     "ruff>=0.4",
 ]
+
+[project.scripts]
+vendora = "app.cli:main"
+
 [tool.setuptools.packages.find]
 include = ["app*"]
 
