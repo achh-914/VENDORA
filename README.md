@@ -21,6 +21,12 @@
 
 ---
 
+## Demo
+
+https://github.com/user-attachments/assets/20be62a8-5ab8-4a64-ac43-f9b70f1c7425
+
+---
+
 ## The problem
 
 A company receives an invoice. Three documents disagree:
