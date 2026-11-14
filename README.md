@@ -252,6 +252,10 @@ vendora/
 
 Feedback and ideas are welcome. Open an issue before proposing larger changes.
 
+
 ## License
 
-Released under the [MIT License](LICENSE).
+Vendora is proprietary software.
+All rights reserved.
+
+See [PROPRIETARY-NOTICE.txt](PROPRIETARY-NOTICE.txt).
