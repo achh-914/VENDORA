@@ -30,3 +30,4 @@ class CaseFile(BaseModel):
     evidence: list[Evidence] = Field(min_length=1)
     proposed_action: list[ProposedAction] = []
     requires_human_approval: bool = True
+    notes: list[str] = []

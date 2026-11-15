@@ -19,6 +19,9 @@ PROMPT = (
     "Extract this procurement document. Return every value exactly as written. "
     "'page' is the 1-based PDF page where the value appears. "
     "For invoices and purchase orders, extract every line item and the total. "
+    "'total' is the final amount payable (TTC when tax is shown). "
+    "'subtotal' is the amount before tax (HT) and 'tax' is the total VAT (TVA) amount: "
+    "fill them only when the document shows them. Line amounts are as written. "
     "For contracts, extract every numbered clause about price, freight, "
     "delivery, fees, or payment terms. Never guess: use null if a value is missing."
 )
@@ -46,6 +49,8 @@ class ExtractedDocument(BaseModel):
     buyer: str | None = None
     currency: str | None = None
     total: float | None = None
+    subtotal: float | None = None
+    tax: float | None = None
     total_page: int | None = None
     lines: list[ExtractedLine] = []
     clauses: list[ExtractedClause] = []

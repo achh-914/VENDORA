@@ -1,0 +1,27 @@
+{
+  "doc_type": "contract",
+  "doc_id": "CT-2026-07",
+  "supplier": "Atlas Réseaux & Télécoms SARL",
+  "buyer": "Oriental Distribution SARL",
+  "currency": "MAD",
+  "total": null,
+  "total_page": 2,
+  "lines": [],
+  "clauses": [
+    {
+      "number": "5.1",
+      "page": 2,
+      "text": "Les prix unitaires hors taxes sont fixes : câble réseau Cat6 à 500,00 MAD la bobine, prise murale RJ45 à 50,00 MAD l'unité. Toute modification exige un avenant signé par les deux parties."
+    },
+    {
+      "number": "5.2",
+      "page": 2,
+      "text": "Les frais de transport et de livraison sont inclus dans le prix unitaire. Le Fournisseur ne peut pas facturer séparément le transport, la manutention ou toute majoration, sauf accord écrit préalable à la commande."
+    },
+    {
+      "number": "5.3",
+      "page": 2,
+      "text": "Le paiement est effectué à 30 jours à compter de la date de facture."
+    }
+  ]
+}

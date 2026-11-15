@@ -159,6 +159,16 @@ python -m app.cli analyze \
   --contract data/samples/msa-acme.pdf
 ```
 
+Analyze the Moroccan-style samples (French wording, MAD, HT/TVA/TTC totals, one planted
+transport-fee error). The offline version uses `tests/fixtures/ma/*.json` instead of PDFs:
+
+```bash
+python -m app.cli analyze \
+  --invoice data/samples_ma/fa-2026-0452.pdf \
+  --po data/samples_ma/bc-2026-119.pdf \
+  --contract data/samples_ma/ct-2026-07.pdf
+```
+
 Open the review dashboard:
 
 ```bash

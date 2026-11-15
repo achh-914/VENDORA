@@ -1,0 +1,30 @@
+{
+  "doc_type": "purchase_order",
+  "doc_id": "BC-2026-119",
+  "supplier": "Atlas Réseaux & Télécoms SARL",
+  "buyer": "Oriental Distribution SARL",
+  "currency": "MAD",
+  "total": 12000.0,
+  "subtotal": 10000.0,
+  "tax": 2000.0,
+  "total_page": 1,
+  "lines": [
+    {
+      "line_no": 1,
+      "description": "Câble réseau Cat6 - bobine",
+      "quantity": 10.0,
+      "unit_price": 500.0,
+      "amount": 5000.0,
+      "page": 1
+    },
+    {
+      "line_no": 2,
+      "description": "Prise murale RJ45",
+      "quantity": 100.0,
+      "unit_price": 50.0,
+      "amount": 5000.0,
+      "page": 1
+    }
+  ],
+  "clauses": []
+}

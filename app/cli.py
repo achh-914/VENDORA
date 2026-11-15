@@ -14,7 +14,7 @@ from google.genai import errors as genai_errors
 
 from app.agents.extraction import ExtractedDocument, extract_document
 from app.agents.investigation import investigate
-from app.agents.matching import CURRENCY_SYMBOLS, match_documents
+from app.agents.matching import currency_code, match_documents
 from app.schemas import CaseFile
 
 RETRIES = 3
@@ -51,8 +51,7 @@ def load_document(path: str) -> ExtractedDocument:
 
 
 def _currency_label(doc: ExtractedDocument) -> str:
-    raw = (doc.currency or "").strip()
-    return CURRENCY_SYMBOLS.get(raw, raw.upper())
+    return currency_code(doc)
 
 
 def render_case(case: CaseFile, currency: str) -> str:
@@ -62,6 +61,7 @@ def render_case(case: CaseFile, currency: str) -> str:
     actions = ", ".join(action.value for action in case.proposed_action)
     status = "Waiting for human approval." if case.requires_human_approval else ""
     lines.append(f"! Proposed: {actions}. {status}".rstrip())
+    lines.extend(f"? Check: {note}" for note in case.notes)
     return "\n".join(lines)
 
 

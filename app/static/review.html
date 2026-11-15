@@ -159,6 +159,7 @@ function renderDetail(record, audit) {
       el("p", {class: "delta"}, "Difference: ", el("strong", {}, nf.format(c.delta))),
       el("p", {class: "note"}, "Case " + c.case_id + (record.source === "demo" ? ". Demo data, not produced by the pipeline." : "")),
       el("h3", {}, "Evidence"), evidenceList(c.evidence),
+      ...(c.notes || []).map((text) => el("p", {class: "note"}, "Check before approving: " + text)),
       el("h3", {}, "Proposed actions"), actionsBlock(c.proposed_action || [])),
     decisionCard(record),
     auditCard(audit));
