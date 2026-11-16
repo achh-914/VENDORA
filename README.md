@@ -23,10 +23,9 @@
 
 ## Demo
 
-https://github.com/user-attachments/assets/20be62a8-5ab8-4a64-ac43-f9b70f1c7425
+https://github.com/user-attachments/assets/40030214-58e8-4662-b261-8cfd0881b4d1
 
 ---
-
 
 ## The problem
 
