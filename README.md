@@ -14,7 +14,7 @@
   <img alt="python" src="https://img.shields.io/badge/python-3.12-3776ab?style=flat-square">
   <img alt="fastapi" src="https://img.shields.io/badge/API-FastAPI-009688?style=flat-square">
   <img alt="llm" src="https://img.shields.io/badge/LLM-Gemini-4285f4?style=flat-square">
-  <img alt="license" src="https://img.shields.io/badge/license-MIT-16a34a?style=flat-square">
+  <img alt="license" src="https://img.shields.io/badge/license-all%20rights%20reserved-6b7280?style=flat-square">
   <img alt="schema" src="https://github.com/achh-914/VENDORA/actions/workflows/schema.yml/badge.svg">
   <a href="https://github.com/achh-914/VENDORA/actions/workflows/ci.yml"><img src="https://github.com/achh-914/VENDORA/actions/workflows/ci.yml/badge.svg" alt="ci"></a>
 </p>
@@ -27,26 +27,6 @@ https://github.com/user-attachments/assets/20be62a8-5ab8-4a64-ac43-f9b70f1c7425
 
 ---
 
-
-## Several customers (multi-tenant)
-
-One Vendora server can serve many customers, each isolated from the others. Give each customer an API key:
-
-```bash
-export VENDORA_API_KEYS="key-for-acme:acme,key-for-nordic:nordic"
-export VENDORA_DB=vendora.db
-uvicorn app.server:app
-```
-
-Every request to the cases API must send `X-API-Key`. A key opens only its own customer, so one customer can never read, approve or even see the cases of another. Each customer also has its own audit chain. In the review dashboard, paste the key in the box at the top right.
-
-Without `VENDORA_API_KEYS`, Vendora runs for a single customer with no login, as before. Use long random keys (for example `python -c "import secrets; print(secrets.token_urlsafe(32))"`). An existing database is upgraded automatically: its data moves to the `default` customer.
-
-## Upload page
-
-Open `/upload`, choose the invoice, the purchase order and the contract as PDFs, and press **Analyze**. Vendora reads each PDF with the AI model, compares the documents, and sends every discrepancy to `/review` for a person to decide. Nothing is executed. PDFs are sent to the AI service to be read and are deleted from the server straight after (a temporary file, never kept).
-
-It needs a model key on the server (`GEMINI_API_KEY`, or `ANTHROPIC_API_KEY` with `VENDORA_PROVIDER=claude`). For real customer documents use a paid key or Vertex AI, not the free tier. With `VENDORA_API_KEYS` set, paste the customer's key in the box at the top right.
 
 ## The problem
 
@@ -77,6 +57,9 @@ Vendora does the investigation and hands the analyst a **case file**: what diffe
 | **Escalate** | Has a person approved it? | Done (M5), review dashboard |
 | **Audit** | Who decided what, based on which evidence? | Done (M5), hash-chained trail |
 | **Evaluate** | How often is the system right? | Done (M4), 80 synthetic cases and a 3-PDF extraction run |
+| **Upload** | Can a customer use it alone? | Done (M6), `/upload` page: three PDFs in, cases for review out |
+| **Several customers** | Is each customer's data kept apart? | Done (M6), API key per customer, separate cases and audit chain |
+| **Other markets** | Does it read French documents and other currencies? | Done (M6), French wording, MAD, HT/TVA/TTC, currency mismatch |
 
 ---
 
@@ -130,6 +113,34 @@ The CLI can submit the case files it produces to the dashboard. See `python -m a
 
 ---
 
+## Upload page
+
+Open `/upload`, choose the invoice, the purchase order and the contract as PDFs, and press **Analyze**. Vendora reads each PDF with the AI model, compares the documents, and sends every discrepancy to `/review` for a person to decide. Nothing is executed. PDFs are sent to the AI service to be read and are deleted from the server straight after (a temporary file, never kept). PDF only, 15 MB at most per file.
+
+It needs a model key on the server (`GEMINI_API_KEY`, or `ANTHROPIC_API_KEY` with `VENDORA_PROVIDER=claude`). For real customer documents use a paid key or Vertex AI, not the free tier. With `VENDORA_API_KEYS` set, paste the customer's key in the box at the top right.
+
+## Several customers (multi-tenant)
+
+One Vendora server can serve many customers, each isolated from the others. Give each customer an API key:
+
+```bash
+export VENDORA_API_KEYS="key-for-acme:acme,key-for-nordic:nordic"
+export VENDORA_DB=vendora.db
+uvicorn app.server:app
+```
+
+Every request to the cases API must send `X-API-Key`. A key opens only its own customer, so one customer can never read, approve or even see the cases of another. Each customer also has its own audit chain. In the review dashboard, paste the key in the box at the top right.
+
+Without `VENDORA_API_KEYS`, Vendora runs for a single customer with no login, as before. Use long random keys (for example `python -c "import secrets; print(secrets.token_urlsafe(32))"`). An existing database is upgraded automatically: its data moves to the `default` customer.
+
+## Languages and currencies
+
+Vendora reads English and French documents. It understands French wording in contracts ("ne peut pas facturer", "franco", "sauf accord écrit préalable"), accents and capital letters, and the HT / TVA / TTC split of a Moroccan invoice (it compares totals before tax, so a tax-inclusive invoice is not flagged against a tax-exclusive order). Currencies: any ISO code (`EUR`, `USD`, `MAD`, `AED`...) plus the symbols `$ € £ ¥ ₹ ₺ zł Kč` and the spellings `DH`, `Dhs` and `درهم`. An invoice and a PO in different currencies are reported as `CURRENCY-MISMATCH` instead of being compared.
+
+Not covered yet: Arabic, Spanish and German clause wording, and scanned documents.
+
+---
+
 ## Discrepancy types
 
 | Tag | What it detects |
@@ -151,7 +162,7 @@ The CLI can submit the case files it produces to the dashboard. See `python -m a
 git clone https://github.com/achh-914/VENDORA.git
 cd VENDORA
 python3 -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev,gemini]"
+pip install -e ".[dev]"
 ```
 
 Run the tests and the offline evaluation (no API key needed):
@@ -191,11 +202,14 @@ python -m app.cli analyze \
   --contract data/samples_ma/ct-2026-07.pdf
 ```
 
-Open the review dashboard:
+Run the app (upload page and review dashboard). `VENDORA_DB` keeps the cases when you restart:
 
 ```bash
-uvicorn app.main:app --reload
-# http://127.0.0.1:8000/review      API docs: http://127.0.0.1:8000/docs
+export GEMINI_API_KEY=your_key_here
+export VENDORA_DB=vendora.db
+uvicorn app.server:app --reload
+# http://127.0.0.1:8000/upload      http://127.0.0.1:8000/review
+# API docs: http://127.0.0.1:8000/docs
 ```
 
 Use synthetic documents only. A free API tier may use inputs to improve the provider's products.
@@ -246,7 +260,8 @@ Run it yourself: `python eval/run_eval.py` (matching) and `python eval/run_extra
 - [x] **M3: Investigation.** Root cause with cited evidence, proposed resolution, audit log
 - [x] **M4: Evaluation.** 80 synthetic cases and automated scoring, plus a field-level extraction score
 - [x] **M5: Demo.** Review dashboard with the human approval flow and audit view
-- [ ] **Later:** Supervisor agent, PostgreSQL storage and evidence store, negotiation agent, compliance rules, dynamic routing, exports, extraction scoring on harder and scanned documents, scoring Claude
+- [x] **M6: Real customers.** Upload page, French and Moroccan documents, currency mismatch, several customers with their own API key and audit chain
+- [ ] **Later:** deployment, an admin page for customer keys, scanned documents (OCR), Arabic, Spanish and German clause wording, Supervisor agent, PostgreSQL storage and evidence store, negotiation agent, compliance rules, dynamic routing, exports, extraction scoring on harder and scanned documents, scoring Claude
 
 ---
 
@@ -259,14 +274,18 @@ vendora/
 │   ├── server.py       alternative app entry point
 │   ├── cli.py          command line: analyze
 │   ├── review.py       review dashboard API
-│   ├── store.py        review store with a hash-chained audit log
+│   ├── upload.py       upload API: read PDFs and queue cases
+│   ├── pipeline.py     PDF reading with retries and the match-and-investigate step
+│   ├── auth.py         customer API keys (one tenant per key)
+│   ├── store.py        review store: per-customer cases and hash-chained audit logs
 │   ├── schemas.py      case file and discrepancy models
 │   ├── demo_case.py    static demo case for the dashboard
-│   ├── static/         review dashboard page
+│   ├── static/         review and upload pages
 │   └── agents/         extraction, matching, investigation
 ├── eval/               case generation and scoring scripts
 ├── scripts/            data generation and evaluation helpers
 ├── data/samples/       synthetic invoice, PO and contract (PDF)
+├── data/samples_ma/    synthetic French documents in MAD (PDF)
 ├── tests/              unit tests and JSON fixtures (run in CI)
 ├── db/                 PostgreSQL schema (not used by the app yet)
 ├── docs/               design notes and assets
@@ -281,7 +300,9 @@ vendora/
 - Early-stage project, not production-ready.
 - Synthetic documents only. No real company data.
 - Actions are simulated. Nothing is sent, held or paid.
-- The review store persists to a local JSON file. PostgreSQL is defined in `db/` but the app does not use it yet.
+- The review store is in memory, or in a local SQLite file when `VENDORA_DB` is set. PostgreSQL is defined in `db/` but the app does not use it yet.
+- Customer API keys are set by the operator in an environment variable. There is no admin page or self sign-up yet.
+- Not deployed anywhere yet: run it on your own machine or server.
 - Matching compares the invoice with the PO. The contract is used to explain unagreed fees; other discrepancy types are not explained from the contract yet.
 - There is no Supervisor agent yet: every case goes to a person.
 - Extraction was scored on three text PDFs, with Gemini only.
@@ -296,4 +317,4 @@ Feedback and ideas are welcome. Open an issue before proposing larger changes.
 Vendora is proprietary software.
 All rights reserved.
 
-See [PROPRIETARY-NOTICE.txt](PROPRIETARY-NOTICE.txt).
+See [LICENSE](LICENSE).
