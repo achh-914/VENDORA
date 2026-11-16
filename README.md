@@ -27,6 +27,21 @@ https://github.com/user-attachments/assets/20be62a8-5ab8-4a64-ac43-f9b70f1c7425
 
 ---
 
+
+## Several customers (multi-tenant)
+
+One Vendora server can serve many customers, each isolated from the others. Give each customer an API key:
+
+```bash
+export VENDORA_API_KEYS="key-for-acme:acme,key-for-nordic:nordic"
+export VENDORA_DB=vendora.db
+uvicorn app.server:app
+```
+
+Every request to the cases API must send `X-API-Key`. A key opens only its own customer, so one customer can never read, approve or even see the cases of another. Each customer also has its own audit chain. In the review dashboard, paste the key in the box at the top right.
+
+Without `VENDORA_API_KEYS`, Vendora runs for a single customer with no login, as before. Use long random keys (for example `python -c "import secrets; print(secrets.token_urlsafe(32))"`). An existing database is upgraded automatically: its data moves to the `default` customer.
+
 ## The problem
 
 A company receives an invoice. Three documents disagree:

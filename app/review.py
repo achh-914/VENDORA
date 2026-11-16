@@ -4,10 +4,11 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field, field_validator
 
+from app.auth import current_tenant
 from app.demo_case import DEMO_CASE
 from app.schemas import CaseFile
 from app.store import (
@@ -20,6 +21,7 @@ from app.store import (
 )
 
 router = APIRouter()
+Tenant = Depends(current_tenant)
 UI_FILE = Path(__file__).parent / "static" / "review.html"
 
 
@@ -57,51 +59,51 @@ def review_page() -> HTMLResponse:
 
 
 @router.get("/cases")
-def list_cases() -> list[dict[str, Any]]:
-    return [_summary(record) for record in STORE.all_cases()]
+def list_cases(tenant: str = Tenant) -> list[dict[str, Any]]:
+    return [_summary(record) for record in STORE.all_cases(tenant)]
 
 
 @router.post("/cases", status_code=201)
-def create_case(case: CaseFile) -> dict[str, Any]:
+def create_case(case: CaseFile, tenant: str = Tenant) -> dict[str, Any]:
     try:
-        record = STORE.add_case(case.model_dump(mode="json"), source="api")
+        record = STORE.add_case(case.model_dump(mode="json"), source="api", tenant=tenant)
     except CaseExistsError:
         raise HTTPException(status_code=409, detail="Case already exists") from None
     return asdict(record)
 
 
 @router.post("/demo/case", status_code=201)
-def create_demo_case() -> dict[str, Any]:
+def create_demo_case(tenant: str = Tenant) -> dict[str, Any]:
     case = CaseFile.model_validate(DEMO_CASE)
     try:
-        record = STORE.add_case(case.model_dump(mode="json"), source="demo")
+        record = STORE.add_case(case.model_dump(mode="json"), source="demo", tenant=tenant)
     except CaseExistsError:
         raise HTTPException(status_code=409, detail="Demo case already exists") from None
     return asdict(record)
 
 
 @router.get("/cases/{case_id}")
-def get_case(case_id: str) -> dict[str, Any]:
+def get_case(case_id: str, tenant: str = Tenant) -> dict[str, Any]:
     try:
-        return asdict(STORE.get(case_id))
+        return asdict(STORE.get(case_id, tenant))
     except CaseNotFoundError:
         raise HTTPException(status_code=404, detail="Case not found") from None
 
 
 @router.get("/cases/{case_id}/audit")
-def get_audit(case_id: str) -> dict[str, Any]:
+def get_audit(case_id: str, tenant: str = Tenant) -> dict[str, Any]:
     try:
-        STORE.get(case_id)
+        STORE.get(case_id, tenant)
     except CaseNotFoundError:
         raise HTTPException(status_code=404, detail="Case not found") from None
-    events, chain_ok = STORE.events_for(case_id)
+    events, chain_ok = STORE.events_for(case_id, tenant)
     return {"events": [asdict(event) for event in events], "chain_ok": chain_ok}
 
 
 @router.post("/cases/{case_id}/decision")
-def decide(case_id: str, body: DecisionIn) -> dict[str, Any]:
+def decide(case_id: str, body: DecisionIn, tenant: str = Tenant) -> dict[str, Any]:
     try:
-        record = STORE.decide(case_id, body.decision, body.decided_by, body.comment)
+        record = STORE.decide(case_id, body.decision, body.decided_by, body.comment, tenant)
     except CaseNotFoundError:
         raise HTTPException(status_code=404, detail="Case not found") from None
     except CaseClosedError:

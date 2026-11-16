@@ -47,6 +47,7 @@ textarea{min-height:64px;resize:vertical}
 <body>
 <header class="top">
   <h1>Vendora <span>review</span></h1>
+  <input id="apikey" type="password" placeholder="API key (if your account has one)" autocomplete="off" aria-label="API key" style="margin-left:auto;max-width:16rem">
   <button id="demo" class="btn ghost" type="button">Add demo case</button>
 </header>
 <main class="layout">
@@ -85,8 +86,13 @@ function toast(message, isError = false) {
   box.className = "show" + (isError ? " err" : "");
   setTimeout(() => { box.className = ""; }, 3500);
 }
-async function api(path, options) {
-  const res = await fetch(path, options);
+function apiKey() {
+  try { return sessionStorage.getItem("vendora_key") || ""; } catch (_) { return ""; }
+}
+async function api(path, options = {}) {
+  const key = apiKey();
+  const headers = {...(options.headers || {}), ...(key ? {"X-API-Key": key} : {})};
+  const res = await fetch(path, {...options, headers});
   if (!res.ok) {
     let message = res.statusText;
     try {
@@ -198,7 +204,19 @@ $("#demo").addEventListener("click", async () => {
   try { await api("/demo/case", {method: "POST"}); toast("Demo case added."); }
   catch (error) { toast(error.message, true); }
   selected = "DEMO-SAMPLE";
-  await refresh().catch((error) => toast(error.message, true));
+  await const keyBox = document.getElementById("apikey");
+keyBox.value = apiKey();
+keyBox.addEventListener("change", () => {
+  try { sessionStorage.setItem("vendora_key", keyBox.value.trim()); } catch (_) { /* no storage */ }
+  refresh().catch((error) => toast(error.message, true));
+});
+refresh().catch((error) => toast(error.message, true));
+});
+const keyBox = document.getElementById("apikey");
+keyBox.value = apiKey();
+keyBox.addEventListener("change", () => {
+  try { sessionStorage.setItem("vendora_key", keyBox.value.trim()); } catch (_) { /* no storage */ }
+  refresh().catch((error) => toast(error.message, true));
 });
 refresh().catch((error) => toast(error.message, true));
 </script>
