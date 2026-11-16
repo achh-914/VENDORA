@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vendora upload</title>
+<style>
+:root{--bg:#f4f6fb;--surface:#fff;--text:#162033;--muted:#5b6b86;--line:#dfe5ef;--teal:#0f766e;--teal-soft:#dff3f0;--amber:#b45309;--amber-soft:#fef3c7;--rose:#be123c;--rose-soft:#ffe4ea;--sky:#1d4ed8;--sky-soft:#e0e9ff;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1628;--surface:#162038;--text:#e8edf7;--muted:#8d9bb8;--line:#2b3a5a;--teal:#2dd4bf;--teal-soft:#0f3a37;--amber:#fbbf24;--amber-soft:#3a2d0a;--rose:#fb7185;--rose-soft:#3d1522;--sky:#93b4ff;--sky-soft:#14284f}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--surface)}
+.top h1{margin:0;font-size:18px}.top h1 span{color:var(--muted);font-weight:400}
+.layout{display:grid;grid-template-columns:minmax(250px,320px) 1fr;gap:16px;max-width:1100px;margin:0 auto;padding:16px}
+@media (max-width:800px){.layout{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.card h2{margin:0;font-size:20px}.card h3{margin:18px 0 6px;font-size:13px;color:var(--muted);font-weight:600}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.muted{color:var(--muted)}.note{font-size:13px;color:var(--muted);margin:6px 0}
+#list{padding:8px}
+.item{display:block;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:10px;padding:10px;color:inherit;font:inherit;cursor:pointer}
+.item:hover{background:var(--bg)}.item[aria-current=true]{border-color:var(--teal);background:var(--teal-soft)}
+.item .meta{font-size:12.5px;color:var(--muted)}
+.chip{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12px;font-weight:600;background:var(--sky-soft);color:var(--sky)}
+.chip.warn{background:var(--amber-soft);color:var(--amber)}.chip.ok{background:var(--teal-soft);color:var(--teal)}.chip.bad{background:var(--rose-soft);color:var(--rose)}
+.delta{margin:6px 0 0}
+.evidence{margin:0;padding-left:20px}.evidence li{margin:6px 0}
+.doc{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;margin-right:8px}
+.page{color:var(--muted);font-size:13px;margin-right:8px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.decision{border:2px solid var(--amber)}.decision h3{color:var(--amber);margin-top:0;font-size:15px}
+label{display:block;font-size:13px;margin:12px 0 4px;color:var(--muted)}
+input,textarea{width:100%;font:inherit;color:inherit;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px}
+textarea{min-height:64px;resize:vertical}
+.btn{font:inherit;font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:8px 14px;cursor:pointer}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+@media (prefers-color-scheme:dark){.btn.primary{color:#062a27}}
+.btn.danger{border-color:var(--rose);color:var(--rose)}.btn.ghost{background:none}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible,.item:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+.timeline{list-style:none;margin:8px 0 0;padding:0}
+.timeline li{padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.timeline .when{display:block;font-size:12px;color:var(--muted)}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.show{opacity:1}#toast.err{background:var(--rose);color:#fff}
+
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+.slot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding:12px 0}
+.slot:first-of-type{border-top:0}
+.slot strong{display:block}.slot .state{font-size:13px;color:var(--muted)}
+.slot .state.err{color:var(--rose)}.slot .state.ok{color:var(--teal)}
+input[type=file]{width:auto;max-width:100%;border:0;padding:0;background:none}
+.result li{margin:6px 0}
+a.btn{display:inline-block;text-decoration:none}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Vendora <span>upload</span></h1>
+  <input id="apikey" type="password" placeholder="API key (if your account has one)" autocomplete="off" aria-label="API key" style="max-width:16rem">
+</header>
+<main class="wrap">
+  <section class="card">
+    <h2>Check an invoice</h2>
+    <p class="note">Upload the invoice, the purchase order and the contract as PDFs. Vendora reads them, compares them, and sends every discrepancy to the review page for a person to decide.</p>
+    <div id="slots">
+      <div class="slot"><div><strong>Invoice</strong><span class="state" id="s-invoice">No file chosen</span></div><input type="file" id="f-invoice" accept="application/pdf,.pdf" aria-label="Invoice PDF"></div>
+      <div class="slot"><div><strong>Purchase order</strong><span class="state" id="s-po">No file chosen</span></div><input type="file" id="f-po" accept="application/pdf,.pdf" aria-label="Purchase order PDF"></div>
+      <div class="slot"><div><strong>Contract</strong><span class="state" id="s-contract">No file chosen</span></div><input type="file" id="f-contract" accept="application/pdf,.pdf" aria-label="Contract PDF"></div>
+    </div>
+    <div class="actions" style="margin-top:14px">
+      <button id="go" class="btn primary" type="button">Analyze</button>
+      <a class="btn ghost" href="/review">Open review</a>
+    </div>
+    <p class="note">Your PDFs are sent to the AI service to be read and are not saved on this server. Actions are only proposed, never executed: a person approves everything.</p>
+  </section>
+  <section id="out" class="card result" hidden aria-live="polite"></section>
+</main>
+<script>
+const NAMES = ["invoice", "po", "contract"];
+const keyBox = document.getElementById("apikey");
+function apiKey() {
+  try { return sessionStorage.getItem("vendora_key") || ""; } catch (_) { return ""; }
+}
+keyBox.value = apiKey();
+keyBox.addEventListener("change", () => {
+  try { sessionStorage.setItem("vendora_key", keyBox.value.trim()); } catch (_) { /* no storage */ }
+});
+function setState(name, text, kind) {
+  const node = document.getElementById("s-" + name);
+  node.textContent = text;
+  node.className = "state" + (kind ? " " + kind : "");
+}
+async function call(path, options) {
+  const key = apiKey();
+  const headers = {...(options.headers || {}), ...(key ? {"X-API-Key": key} : {})};
+  const res = await fetch(path, {...options, headers});
+  let body = null;
+  try { body = await res.json(); } catch (_) { /* not json */ }
+  if (!res.ok) {
+    const detail = body && typeof body.detail === "string" ? body.detail : res.statusText;
+    throw new Error(res.status === 401 ? "Missing or invalid API key." : detail || "Request failed.");
+  }
+  return body;
+}
+NAMES.forEach((name) => {
+  document.getElementById("f-" + name).addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    setState(name, file ? file.name : "No file chosen");
+  });
+});
+function show(nodes) {
+  const out = document.getElementById("out");
+  out.replaceChildren(...nodes);
+  out.hidden = false;
+}
+function node(tag, text, cls) {
+  const n = document.createElement(tag);
+  n.textContent = text;
+  if (cls) n.className = cls;
+  return n;
+}
+function showResult(result) {
+  const nodes = [node("h2", "Result")];
+  if (result.discrepancies === 0) {
+    nodes.push(node("p", "No discrepancies found between " + result.documents.join(", ") + "."));
+  } else {
+    nodes.push(node("p", result.discrepancies + " discrepancy(ies) found. Each one is waiting for a person to decide."));
+    const list = document.createElement("ul");
+    result.cases.forEach((c) => {
+      const li = document.createElement("li");
+      const label = c.state === "created" ? "sent to review" : "already in the review queue";
+      li.textContent = c.case_id + ": " + c.finding + " (" + c.delta.toLocaleString() + "), " + label;
+      list.appendChild(li);
+    });
+    nodes.push(list);
+    const link = node("a", "Open the review page", "btn primary");
+    link.href = "/review";
+    nodes.push(link);
+  }
+  show(nodes);
+}
+document.getElementById("go").addEventListener("click", async () => {
+  const button = document.getElementById("go");
+  const files = NAMES.map((name) => document.getElementById("f-" + name).files[0]);
+  if (files.some((file) => !file)) {
+    show([node("p", "Choose all three PDFs first.", "state err")]);
+    return;
+  }
+  button.disabled = true;
+  document.getElementById("out").hidden = true;
+  const docs = {};
+  try {
+    for (const [index, name] of NAMES.entries()) {
+      setState(name, "Reading...");
+      try {
+        docs[name] = await call("/extract", {
+          method: "POST", headers: {"Content-Type": "application/pdf"}, body: files[index],
+        });
+      } catch (error) {
+        setState(name, error.message, "err");
+        throw new Error("Could not read the " + name + ".");
+      }
+      setState(name, "Read: " + (docs[name].doc_id || "ok"), "ok");
+    }
+    showResult(await call("/analyze", {
+      method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(docs),
+    }));
+  } catch (error) {
+    show([node("p", error.message, "state err")]);
+  } finally {
+    button.disabled = false;
+  }
+});
+</script>
+</body>
+</html>

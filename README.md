@@ -42,6 +42,12 @@ Every request to the cases API must send `X-API-Key`. A key opens only its own c
 
 Without `VENDORA_API_KEYS`, Vendora runs for a single customer with no login, as before. Use long random keys (for example `python -c "import secrets; print(secrets.token_urlsafe(32))"`). An existing database is upgraded automatically: its data moves to the `default` customer.
 
+## Upload page
+
+Open `/upload`, choose the invoice, the purchase order and the contract as PDFs, and press **Analyze**. Vendora reads each PDF with the AI model, compares the documents, and sends every discrepancy to `/review` for a person to decide. Nothing is executed. PDFs are sent to the AI service to be read and are deleted from the server straight after (a temporary file, never kept).
+
+It needs a model key on the server (`GEMINI_API_KEY`, or `ANTHROPIC_API_KEY` with `VENDORA_PROVIDER=claude`). For real customer documents use a paid key or Vertex AI, not the free tier. With `VENDORA_API_KEYS` set, paste the customer's key in the box at the top right.
+
 ## The problem
 
 A company receives an invoice. Three documents disagree:

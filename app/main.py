@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app import review
+from app import review, upload
 
 STATIC_DIR = Path(__file__).parent / "static"
 
@@ -15,6 +15,7 @@ app = FastAPI(
 )
 
 app.include_router(review.router)
+app.include_router(upload.router)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
