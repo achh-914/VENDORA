@@ -57,7 +57,7 @@ textarea{min-height:64px;resize:vertical}
 <script>
 const $ = (selector) => document.querySelector(selector);
 const nf = new Intl.NumberFormat("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
-const FINDING = {"PRICE-MISMATCH": "Price mismatch", "UNAGREED-FEE": "Unagreed fee", "QTY-VARIANCE": "Quantity variance", "DUPLICATE-LINE": "Duplicate line", "TERMS-CONFLICT": "Terms conflict"};
+const FINDING = {"PRICE-MISMATCH": "Price mismatch", "UNAGREED-FEE": "Unagreed fee", "QTY-VARIANCE": "Quantity variance", "DUPLICATE-LINE": "Duplicate line", "TERMS-CONFLICT": "Terms conflict", "CURRENCY-MISMATCH": "Currency mismatch"};
 const ACTION = {HOLD_INVOICE: "Hold the invoice", DRAFT_SUPPLIER_MESSAGE: "Draft a message to the supplier", ESCALATE: "Escalate to the owner"};
 const STATUS = {awaiting_approval: ["Awaiting approval", "warn"], approved: ["Approved", "ok"], rejected: ["Rejected", "bad"], changes_requested: ["Changes requested", ""]};
 const EVENT = {case_created: "Case created", decision_approved: "Approved", decision_rejected: "Rejected", decision_changes_requested: "Changes requested", action_simulated: "Action simulated"};

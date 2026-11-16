@@ -9,6 +9,7 @@ class DiscrepancyType(StrEnum):
     QTY_VARIANCE = "QTY-VARIANCE"
     DUPLICATE_LINE = "DUPLICATE-LINE"
     TERMS_CONFLICT = "TERMS-CONFLICT"
+    CURRENCY_MISMATCH = "CURRENCY-MISMATCH"
 
 
 class ProposedAction(StrEnum):

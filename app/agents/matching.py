@@ -17,6 +17,12 @@ CURRENCY_SYMBOLS = {
     "$": "USD",
     "€": "EUR",
     "£": "GBP",
+    "¥": "JPY",
+    "₹": "INR",
+    "₺": "TRY",
+    "ZŁ": "PLN",
+    "KČ": "CZK",
+    "RMB": "CNY",
     "DH": "MAD",
     "DHS": "MAD",
     "MAD": "MAD",
@@ -171,11 +177,34 @@ def _reconcile_totals(
     ]
 
 
+def _currency_mismatch(invoice: ExtractedDocument, po: ExtractedDocument) -> Finding | None:
+    """Different currencies: amounts cannot be compared, so no line is checked."""
+    inv_cur, po_cur = _currency(invoice), _currency(po)
+    if not inv_cur or not po_cur or inv_cur == po_cur:
+        return None
+    return Finding(
+        type=DiscrepancyType.CURRENCY_MISMATCH,
+        delta=0.0,
+        summary=(
+            f"The invoice is in {inv_cur} but the PO is in {po_cur}: "
+            "amounts were not compared. Check the agreed currency or exchange rate."
+        ),
+        evidence=[
+            Evidence(doc=invoice.doc_id, page=invoice.total_page or 1, ref=f"currency {inv_cur}"),
+            Evidence(doc=po.doc_id, page=po.total_page or 1, ref=f"currency {po_cur}"),
+        ],
+    )
+
+
 def match_documents(invoice: ExtractedDocument, po: ExtractedDocument) -> list[Finding]:
     """Compare invoice lines against PO lines and return the discrepancies."""
     po_lines: dict[str, ExtractedLine] = {}
     for line in po.lines:
         po_lines.setdefault(_key(line), line)
+
+    mismatch = _currency_mismatch(invoice, po)
+    if mismatch:
+        return [mismatch]
 
     findings: list[Finding] = []
     seen: set[str] = set()

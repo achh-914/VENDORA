@@ -118,6 +118,7 @@ The CLI can submit the case files it produces to the dashboard. See `python -m a
 | `QTY-VARIANCE` | Billed quantity differs from the quantity ordered or received |
 | `DUPLICATE-LINE` | The same line item billed twice |
 | `TERMS-CONFLICT` | Payment terms or pricing rules contradict the contract |
+| `CURRENCY-MISMATCH` | The invoice and the PO are in different currencies, so amounts cannot be compared |
 
 `TERMS-CONFLICT` is defined in the schema but is not covered by the evaluation yet.
 
