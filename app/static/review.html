@@ -204,13 +204,7 @@ $("#demo").addEventListener("click", async () => {
   try { await api("/demo/case", {method: "POST"}); toast("Demo case added."); }
   catch (error) { toast(error.message, true); }
   selected = "DEMO-SAMPLE";
-  await const keyBox = document.getElementById("apikey");
-keyBox.value = apiKey();
-keyBox.addEventListener("change", () => {
-  try { sessionStorage.setItem("vendora_key", keyBox.value.trim()); } catch (_) { /* no storage */ }
-  refresh().catch((error) => toast(error.message, true));
-});
-refresh().catch((error) => toast(error.message, true));
+  await refresh().catch((error) => toast(error.message, true));
 });
 const keyBox = document.getElementById("apikey");
 keyBox.value = apiKey();
